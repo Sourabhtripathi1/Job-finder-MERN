@@ -1,0 +1,17 @@
+{
+  "name": "job-portal-website-mern",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sourabh Tripathi",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.1.0",
+    "dotenv": "^16.4.5",
+    "npm-check-updates": "^17.1.11"
+  }
+}
