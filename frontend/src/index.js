@@ -7,6 +7,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
 import store from "./store";
 
+// import "./assets/js/vendor/jquery-1.12.4.min.js";
+// import "./assets/js/wow.min.js";
+
+// import "./assets/js/main.js";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>

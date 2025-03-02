@@ -5,12 +5,12 @@ const Header = () => {
     <>
       {/* Preloader Start  */}
       <div id="preloader-active">
-        <div class="preloader d-flex align-items-center justify-content-center">
-          <div class="preloader-inner position-relative">
-            <div class="preloader-circle"></div>
-            <div class="preloader-img pere-text">
+        <div className="preloader d-flex align-items-center justify-content-center">
+          <div className="preloader-inner position-relative">
+            <div className="preloader-circle"></div>
+            <div className="preloader-img pere-text">
               <img
-                src={`${process.env.PUBLIC_URL}/assets/img/logo/logo.png`}
+                src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/logo/logo.png`}
                 alt=""
               />
             </div>
@@ -20,26 +20,26 @@ const Header = () => {
       {/* Preloader Start  */}
       <header>
         {/* Header Start  */}
-        <div class="header-area header-transparrent">
-          <div class="headder-top header-sticky">
-            <div class="container">
-              <div class="row align-items-center">
-                <div class="col-lg-3 col-md-2">
+        <div className="header-area header-transparrent">
+          <div className="headder-top header-sticky">
+            <div className="container">
+              <div className="row align-items-center">
+                <div className="col-lg-3 col-md-2">
                   {/* Logo  */}
-                  <div class="logo">
+                  <div className="logo">
                     <a href="index-2.html">
                       <img
-                        src="${process.env.PUBLIC_URL}/assets/img/logo/logo.png"
+                        src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/logo/logo.png`}
                         alt=""
                       />
                     </a>
                   </div>
                 </div>
-                <div class="col-lg-9 col-md-9">
-                  <div class="menu-wrapper">
+                <div className="col-lg-9 col-md-9">
+                  <div className="menu-wrapper">
                     {/* Main-menu  */}
-                    <div class="main-menu">
-                      <nav class="d-none d-lg-block">
+                    <div className="main-menu">
+                      <nav className="d-none d-lg-block">
                         <ul id="navigation">
                           <li>
                             <a href="index-2.html">Home</a>
@@ -52,7 +52,7 @@ const Header = () => {
                           </li>
                           <li>
                             <a href="#">Page</a>
-                            <ul class="submenu">
+                            <ul className="submenu">
                               <li>
                                 <a href="blog.html">Blog</a>
                               </li>
@@ -74,19 +74,19 @@ const Header = () => {
                       </nav>
                     </div>
                     {/* Header-btn  */}
-                    <div class="header-btn d-none f-right d-lg-block">
-                      <a href="#" class="btn head-btn1">
+                    <div className="header-btn d-none f-right d-lg-block">
+                      <a href="#" className="btn head-btn1">
                         Register
                       </a>
-                      <a href="#" class="btn head-btn2">
+                      <a href="#" className="btn head-btn2">
                         Login
                       </a>
                     </div>
                   </div>
                 </div>
                 {/* Mobile Menu  */}
-                <div class="col-12">
-                  <div class="mobile_menu d-block d-lg-none"></div>
+                <div className="col-12">
+                  <div className="mobile_menu d-block d-lg-none"></div>
                 </div>
               </div>
             </div>
