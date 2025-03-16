@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
@@ -7,6 +8,8 @@ import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const [count, setCount] = useState(0);
+
   return (
     <>
       <Header />

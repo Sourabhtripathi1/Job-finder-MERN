@@ -9,10 +9,7 @@ const Header = () => {
           <div className="preloader-inner position-relative">
             <div className="preloader-circle"></div>
             <div className="preloader-img pere-text">
-              <img
-                src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/logo/logo.png`}
-                alt=""
-              />
+              <img src="/assets/img/logo/logo.png" alt="" />
             </div>
           </div>
         </div>
@@ -28,10 +25,7 @@ const Header = () => {
                   {/* Logo  */}
                   <div className="logo">
                     <a href="index-2.html">
-                      <img
-                        src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/logo/logo.png`}
-                        alt=""
-                      />
+                      <img src={`/assets/img/logo/logo.png`} alt="" />
                     </a>
                   </div>
                 </div>

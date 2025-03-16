@@ -13,7 +13,7 @@ app.use(cors());
 app.use("/api/auth", require("./routes/auth"));
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error(err));
 

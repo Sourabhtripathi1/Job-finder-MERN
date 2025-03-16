@@ -9,7 +9,7 @@ const Home = () => {
         <div className="slider-active">
           <div
             className="single-slider slider-height d-flex align-items-center"
-            data-background={`${process.env.REACT_APP_PUBLIC_URL}assets/img/hero/h1_hero.jpg`}>
+            data-background={`/assets/img/hero/h1_hero.jpg`}>
             <div className="container">
               <div className="row">
                 <div className="col-xl-6 col-lg-9 col-md-10">
@@ -183,7 +183,7 @@ const Home = () => {
       {/* Online CV Area Start  */}
       <div
         className="online-cv cv-bg section-overly pt-90 pb-120"
-        data-background={`${process.env.REACT_APP_PUBLIC_URL}assets/img/gallery/cv_bg.jpg`}>
+        data-background={`/assets/img/gallery/cv_bg.jpg`}>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-xl-10">
@@ -221,10 +221,7 @@ const Home = () => {
                 <div className="job-items">
                   <div className="company-img">
                     <a href="job_details.html">
-                      <img
-                        src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/icon/job-list1.png`}
-                        alt=""
-                      />
+                      <img src={`/assets/img/icon/job-list1.png`} alt="" />
                     </a>
                   </div>
                   <div className="job-tittle">
@@ -250,10 +247,7 @@ const Home = () => {
                 <div className="job-items">
                   <div className="company-img">
                     <a href="job_details.html">
-                      <img
-                        src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/icon/job-list2.png`}
-                        alt=""
-                      />
+                      <img src={`/assets/img/icon/job-list2.png`} alt="" />
                     </a>
                   </div>
                   <div className="job-tittle">
@@ -279,10 +273,7 @@ const Home = () => {
                 <div className="job-items">
                   <div className="company-img">
                     <a href="job_details.html">
-                      <img
-                        src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/icon/job-list3.png`}
-                        alt=""
-                      />
+                      <img src={`/assets/img/icon/job-list3.png`} alt="" />
                     </a>
                   </div>
                   <div className="job-tittle">
@@ -308,10 +299,7 @@ const Home = () => {
                 <div className="job-items">
                   <div className="company-img">
                     <a href="job_details.html">
-                      <img
-                        src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/icon/job-list4.png`}
-                        alt=""
-                      />
+                      <img src={`/assets/img/icon/job-list4.png`} alt="" />
                     </a>
                   </div>
                   <div className="job-tittle">
@@ -340,7 +328,7 @@ const Home = () => {
       {/* How  Apply Process Start */}
       <div
         className="apply-process-area apply-bg pt-150 pb-150"
-        data-background={`${process.env.REACT_APP_PUBLIC_URL}assets/img/gallery/how-applybg.png`}>
+        data-background={`/assets/img/gallery/how-applybg.png`}>
         <div className="container">
           {/* Section Tittle  */}
           <div className="row">
@@ -414,7 +402,7 @@ const Home = () => {
                     <div className="testimonial-founder  ">
                       <div className="founder-img mb-30">
                         <img
-                          src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/testmonial/testimonial-founder.png`}
+                          src={`/assets/img/testmonial/testimonial-founder.png`}
                           alt=""
                         />
                         <span>Margaret Lawson</span>
@@ -439,7 +427,7 @@ const Home = () => {
                     <div className="testimonial-founder  ">
                       <div className="founder-img mb-30">
                         <img
-                          src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/testmonial/testimonial-founder.png`}
+                          src={`/assets/img/testmonial/testimonial-founder.png`}
                           alt=""
                         />
                         <span>Margaret Lawson</span>
@@ -464,7 +452,7 @@ const Home = () => {
                     <div className="testimonial-founder  ">
                       <div className="founder-img mb-30">
                         <img
-                          src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/testmonial/testimonial-founder.png`}
+                          src={`/assets/img/testmonial/testimonial-founder.png`}
                           alt=""
                         />
                         <span>Margaret Lawson</span>
@@ -519,10 +507,7 @@ const Home = () => {
             </div>
             <div className="col-xl-6 col-lg-6">
               <div className="support-location-img">
-                <img
-                  src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/service/support-img.jpg`}
-                  alt=""
-                />
+                <img src={`/assets/img/service/support-img.jpg`} alt="" />
                 <div className="support-img-cap text-center">
                   <p>Since</p>
                   <span>1994</span>
@@ -550,10 +535,7 @@ const Home = () => {
               <div className="home-blog-single mb-30">
                 <div className="blog-img-cap">
                   <div className="blog-img">
-                    <img
-                      src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/blog/home-blog1.jpg`}
-                      alt=""
-                    />
+                    <img src={`/assets/img/blog/home-blog1.jpg`} alt="" />
                     {/* Blog date  */}
                     <div className="blog-date text-center">
                       <span>24</span>
@@ -578,10 +560,7 @@ const Home = () => {
               <div className="home-blog-single mb-30">
                 <div className="blog-img-cap">
                   <div className="blog-img">
-                    <img
-                      src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/blog/home-blog2.jpg`}
-                      alt=""
-                    />
+                    <img src={`/assets/img/blog/home-blog2.jpg`} alt="" />
                     {/* Blog date  */}
                     <div className="blog-date text-center">
                       <span>24</span>

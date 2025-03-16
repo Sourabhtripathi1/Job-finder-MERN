@@ -107,10 +107,7 @@ const Footer = () => {
                               name="submit"
                               id="newsletter-submit"
                               className="email_icon newsletter-submit button-contactForm">
-                              <img
-                                src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/icon/form.png`}
-                                alt=""
-                              />
+                              <img src={`/assets/img/icon/form.png`} alt="" />
                             </button>
                           </div>
                           <div className="mt-10 info"></div>
@@ -126,10 +123,7 @@ const Footer = () => {
                 {/*  logo  */}
                 <div className="footer-logo mb-20">
                   <a href="index-2.html">
-                    <img
-                      src={`${process.env.REACT_APP_PUBLIC_URL}assets/img/logo/logo2_footer.png`}
-                      alt=""
-                    />
+                    <img src={`/assets/img/logo/logo2_footer.png`} alt="" />
                   </a>
                 </div>
               </div>
