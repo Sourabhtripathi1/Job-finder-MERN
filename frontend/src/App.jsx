@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
@@ -6,9 +6,11 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
+import useInitializeTheme from "./hooks/useInitializeTheme";
 
 function App() {
-  const [count, setCount] = useState(0);
+  // Initialize theme functionality
+  useInitializeTheme();
 
   return (
     <>
