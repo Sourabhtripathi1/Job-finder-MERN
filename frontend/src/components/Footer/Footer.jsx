@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -34,17 +35,17 @@ const Footer = () => {
                         </p>
                       </li>
                       <li>
-                        <a href="#">Phone : +8880 44338899</a>
+                        <Link to="/">Phone : +8880 44338899</Link>
                       </li>
                       <li>
-                        <a href="#">
+                        <Link to="/">
                           Email :{" "}
                           <span
                             className="__cf_email__"
                             data-cfemail="a4cdcac2cbe4c7cbc8cbd6c8cdc68ac7cbc9">
                             [email&#160;protected]
                           </span>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </div>
@@ -56,19 +57,16 @@ const Footer = () => {
                     <h4>Important Link</h4>
                     <ul>
                       <li>
-                        <a href="#"> View Project</a>
+                        <Link to="/contact">Contact Us</Link>
                       </li>
                       <li>
-                        <a href="#">Contact Us</a>
+                        <Link to="/">Testimonial</Link>
                       </li>
                       <li>
-                        <a href="#">Testimonial</a>
+                        <Link to="/">Proparties</Link>
                       </li>
                       <li>
-                        <a href="#">Proparties</a>
-                      </li>
-                      <li>
-                        <a href="#">Support</a>
+                        <Link to="/">Support</Link>
                       </li>
                     </ul>
                   </div>
@@ -122,9 +120,9 @@ const Footer = () => {
               <div className="col-xl-3 col-lg-3 col-md-4 col-sm-6">
                 {/*  logo  */}
                 <div className="footer-logo mb-20">
-                  <a href="index-2.html">
+                  <Link to="/">
                     <img src={`/assets/img/logo/logo2_footer.png`} alt="" />
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="col-xl-3 col-lg-3 col-md-4 col-sm-5">
@@ -165,27 +163,27 @@ const Footer = () => {
                       <script>document.write(new Date().getFullYear());</script>{" "}
                       All rights reserved | This template is made with{" "}
                       <i className="fa fa-heart" aria-hidden="true"></i> by{" "}
-                      <a href="https://colorlib.com/" target="_blank">
+                      <Link to="https://colorlib.com/" target="_blank">
                         Colorlib
-                      </a>
+                      </Link>
                       {/*  Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0.  */}
                     </p>
                   </div>
                 </div>
                 <div className="col-xl-2 col-lg-2">
                   <div className="footer-social f-right">
-                    <a href="#">
+                    <Link to="/">
                       <i className="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link to="/">
                       <i className="fab fa-twitter"></i>
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link to="/">
                       <i className="fas fa-globe"></i>
-                    </a>
-                    <a href="#">
+                    </Link>
+                    <Link to="/">
                       <i className="fab fa-behance"></i>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

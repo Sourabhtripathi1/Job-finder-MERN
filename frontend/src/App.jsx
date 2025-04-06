@@ -1,36 +1,43 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import JobListing from "./pages/JobListing";
+import About from "./pages/About";
+import ContactUs from "./pages/ContactUs";
+import JobDetails from "./pages/JobDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
+import URLNotFound from "./pages/URLNotFound";
 import useInitializeTheme from "./hooks/useInitializeTheme";
 
 function App() {
-  // Initialize theme functionality
-  useInitializeTheme();
+  useInitializeTheme(); // ✅ Theme updates automatically on route change
 
   return (
     <>
       <Header />
       <main>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/job-listing" element={<JobListing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/job-details" element={<JobDetails />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<URLNotFound />} />
+        </Routes>
       </main>
       <Footer />
     </>

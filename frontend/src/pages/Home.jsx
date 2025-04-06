@@ -1,4 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import JobSearch from "../elements/Functionals/JobSearch/JobSearch";
+import Testimonials from "../components/Testimonials/Testimonials";
 
 const Home = () => {
   return (
@@ -22,24 +25,7 @@ const Home = () => {
               <div className="row">
                 <div className="col-xl-8">
                   {/* form  */}
-                  <form action="#" className="search-box">
-                    <div className="input-form">
-                      <input type="text" placeholder="Job Tittle or keyword" />
-                    </div>
-                    <div className="select-form">
-                      <div className="select-itms">
-                        <select name="select" id="select1">
-                          <option value="">Location BD</option>
-                          <option value="">Location PK</option>
-                          <option value="">Location US</option>
-                          <option value="">Location UK</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div className="search-form">
-                      <a href="#">Find job</a>
-                    </div>
-                  </form>
+                  <JobSearch />
                 </div>
               </div>
             </div>
@@ -68,7 +54,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Design & Creative</a>
+                    <Link to="job_listing.html">Design & Creative</Link>
                   </h5>
                   <span>(653)</span>
                 </div>
@@ -81,7 +67,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Design & Development</a>
+                    <Link to="job_listing.html">Design & Development</Link>
                   </h5>
                   <span>(658)</span>
                 </div>
@@ -94,7 +80,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Sales & Marketing</a>
+                    <Link to="job_listing.html">Sales & Marketing</Link>
                   </h5>
                   <span>(658)</span>
                 </div>
@@ -107,7 +93,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Mobile Application</a>
+                    <Link to="job_listing.html">Mobile Application</Link>
                   </h5>
                   <span>(658)</span>
                 </div>
@@ -120,7 +106,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Construction</a>
+                    <Link to="job_listing.html">Construction</Link>
                   </h5>
                   <span>(658)</span>
                 </div>
@@ -133,7 +119,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Information Technology</a>
+                    <Link to="job_listing.html">Information Technology</Link>
                   </h5>
                   <span>(658)</span>
                 </div>
@@ -146,7 +132,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Real Estate</a>
+                    <Link to="job_listing.html">Real Estate</Link>
                   </h5>
                   <span>(658)</span>
                 </div>
@@ -159,7 +145,7 @@ const Home = () => {
                 </div>
                 <div className="services-cap">
                   <h5>
-                    <a href="job_listing.html">Content Writer</a>
+                    <Link to="job_listing.html">Content Writer</Link>
                   </h5>
                   <span>(658)</span>
                 </div>
@@ -171,15 +157,16 @@ const Home = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="browse-btn2 text-center mt-50">
-                <a href="job_listing.html" className="border-btn2">
+                <Link to="job_listing.html" className="border-btn2">
                   Browse All Sectors
-                </a>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
       {/* Our Services End  */}
+
       {/* Online CV Area Start  */}
       <div
         className="online-cv cv-bg section-overly pt-90 pb-120"
@@ -193,15 +180,16 @@ const Home = () => {
                   {" "}
                   Make a Difference with Your Online Resume!
                 </p>
-                <a href="#" className="border-btn2 border-btn4">
+                <Link to="#" className="border-btn2 border-btn4">
                   Upload your cv
-                </a>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
       {/* Online CV Area End */}
+
       {/* Featured_job_start  */}
       <section className="featured-job-area feature-padding">
         <div className="container">
@@ -220,14 +208,14 @@ const Home = () => {
               <div className="single-job-items mb-30">
                 <div className="job-items">
                   <div className="company-img">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <img src={`/assets/img/icon/job-list1.png`} alt="" />
-                    </a>
+                    </Link>
                   </div>
                   <div className="job-tittle">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <h4>Digital Marketer</h4>
-                    </a>
+                    </Link>
                     <ul>
                       <li>Creative Agency</li>
                       <li>
@@ -238,7 +226,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="items-link f-right">
-                  <a href="job_details.html">Full Time</a>
+                  <Link to="job_details.html">Full Time</Link>
                   <span>7 hours ago</span>
                 </div>
               </div>
@@ -246,14 +234,14 @@ const Home = () => {
               <div className="single-job-items mb-30">
                 <div className="job-items">
                   <div className="company-img">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <img src={`/assets/img/icon/job-list2.png`} alt="" />
-                    </a>
+                    </Link>
                   </div>
                   <div className="job-tittle">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <h4>Digital Marketer</h4>
-                    </a>
+                    </Link>
                     <ul>
                       <li>Creative Agency</li>
                       <li>
@@ -264,7 +252,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="items-link f-right">
-                  <a href="job_details.html">Full Time</a>
+                  <Link to="job_details.html">Full Time</Link>
                   <span>7 hours ago</span>
                 </div>
               </div>
@@ -272,14 +260,14 @@ const Home = () => {
               <div className="single-job-items mb-30">
                 <div className="job-items">
                   <div className="company-img">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <img src={`/assets/img/icon/job-list3.png`} alt="" />
-                    </a>
+                    </Link>
                   </div>
                   <div className="job-tittle">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <h4>Digital Marketer</h4>
-                    </a>
+                    </Link>
                     <ul>
                       <li>Creative Agency</li>
                       <li>
@@ -290,7 +278,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="items-link f-right">
-                  <a href="job_details.html">Full Time</a>
+                  <Link to="job_details.html">Full Time</Link>
                   <span>7 hours ago</span>
                 </div>
               </div>
@@ -298,14 +286,14 @@ const Home = () => {
               <div className="single-job-items mb-30">
                 <div className="job-items">
                   <div className="company-img">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <img src={`/assets/img/icon/job-list4.png`} alt="" />
-                    </a>
+                    </Link>
                   </div>
                   <div className="job-tittle">
-                    <a href="job_details.html">
+                    <Link to="job_details.html">
                       <h4>Digital Marketer</h4>
-                    </a>
+                    </Link>
                     <ul>
                       <li>Creative Agency</li>
                       <li>
@@ -316,7 +304,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className="items-link f-right">
-                  <a href="job_details.html">Full Time</a>
+                  <Link to="job_details.html">Full Time</Link>
                   <span>7 hours ago</span>
                 </div>
               </div>
@@ -325,6 +313,7 @@ const Home = () => {
         </div>
       </section>
       {/* Featured_job_end  */}
+
       {/* How  Apply Process Start */}
       <div
         className="apply-process-area apply-bg pt-150 pb-150"
@@ -387,94 +376,11 @@ const Home = () => {
         </div>
       </div>
       {/* How  Apply Process End */}
-      {/* Testimonial Start  */}
-      <div className="testimonial-area testimonial-padding">
-        <div className="container">
-          {/* Testimonial contents  */}
-          <div className="row d-flex justify-content-center">
-            <div className="col-xl-8 col-lg-8 col-md-10">
-              <div className="h1-testimonial-active dot-style">
-                {/* Single Testimonial  */}
-                <div className="single-testimonial text-center">
-                  {/* Testimonial Content  */}
-                  <div className="testimonial-caption ">
-                    {/* founder  */}
-                    <div className="testimonial-founder  ">
-                      <div className="founder-img mb-30">
-                        <img
-                          src={`/assets/img/testmonial/testimonial-founder.png`}
-                          alt=""
-                        />
-                        <span>Margaret Lawson</span>
-                        <p>Creative Director</p>
-                      </div>
-                    </div>
-                    <div className="testimonial-top-cap">
-                      <p>
-                        “I am at an age where I just want to be fit and healthy
-                        our bodies are our responsibility! So start caring for
-                        your body and it will care for you. Eat clean it will
-                        care for you and workout hard.”
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {/* Single Testimonial  */}
-                <div className="single-testimonial text-center">
-                  {/* Testimonial Content  */}
-                  <div className="testimonial-caption ">
-                    {/* founder  */}
-                    <div className="testimonial-founder  ">
-                      <div className="founder-img mb-30">
-                        <img
-                          src={`/assets/img/testmonial/testimonial-founder.png`}
-                          alt=""
-                        />
-                        <span>Margaret Lawson</span>
-                        <p>Creative Director</p>
-                      </div>
-                    </div>
-                    <div className="testimonial-top-cap">
-                      <p>
-                        “I am at an age where I just want to be fit and healthy
-                        our bodies are our responsibility! So start caring for
-                        your body and it will care for you. Eat clean it will
-                        care for you and workout hard.”
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {/* Single Testimonial  */}
-                <div className="single-testimonial text-center">
-                  {/* Testimonial Content  */}
-                  <div className="testimonial-caption ">
-                    {/* founder  */}
-                    <div className="testimonial-founder  ">
-                      <div className="founder-img mb-30">
-                        <img
-                          src={`/assets/img/testmonial/testimonial-founder.png`}
-                          alt=""
-                        />
-                        <span>Margaret Lawson</span>
-                        <p>Creative Director</p>
-                      </div>
-                    </div>
-                    <div className="testimonial-top-cap">
-                      <p>
-                        “I am at an age where I just want to be fit and healthy
-                        our bodies are our responsibility! So start caring for
-                        your body and it will care for you. Eat clean it will
-                        care for you and workout hard.”
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Testimonial End  */}
+
+      {/* Testimonials Start */}
+      <Testimonials />
+      {/* Testimonials end */}
+
       {/* Support Company Start */}
       <div className="support-company-area support-padding fix">
         <div className="container">
@@ -499,9 +405,9 @@ const Home = () => {
                     mollit aboru. temnthp incididbnt ut labore mollit anim
                     laborum suis aute.
                   </p>
-                  <a href="about.html" className="btn post-btn">
+                  <Link to="about.html" className="btn post-btn">
                     Post a job
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -518,6 +424,7 @@ const Home = () => {
         </div>
       </div>
       {/* Support Company End */}
+
       {/* Blog Area Start  */}
       <div className="home-blog-area blog-h-padding">
         <div className="container">
@@ -545,13 +452,13 @@ const Home = () => {
                   <div className="blog-cap">
                     <p>| Properties</p>
                     <h3>
-                      <a href="single-blog.html">
+                      <Link to="single-blog.html">
                         Footprints in Time is perfect House in Kurashiki
-                      </a>
+                      </Link>
                     </h3>
-                    <a href="#" className="more-btn">
+                    <Link to="#" className="more-btn">
                       Read more »
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -570,13 +477,13 @@ const Home = () => {
                   <div className="blog-cap">
                     <p>| Properties</p>
                     <h3>
-                      <a href="single-blog.html">
+                      <Link to="single-blog.html">
                         Footprints in Time is perfect House in Kurashiki
-                      </a>
+                      </Link>
                     </h3>
-                    <a href="#" className="more-btn">
+                    <Link to="#" className="more-btn">
                       Read more »
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

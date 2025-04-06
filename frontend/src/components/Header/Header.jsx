@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -24,9 +25,9 @@ const Header = () => {
                 <div className="col-lg-3 col-md-2">
                   {/* Logo  */}
                   <div className="logo">
-                    <a href="index-2.html">
+                    <Link to="/">
                       <img src={`/assets/img/logo/logo.png`} alt="" />
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="col-lg-9 col-md-9">
@@ -36,45 +37,45 @@ const Header = () => {
                       <nav className="d-none d-lg-block">
                         <ul id="navigation">
                           <li>
-                            <a href="index-2.html">Home</a>
+                            <Link to="/">Home</Link>
                           </li>
                           <li>
-                            <a href="job_listing.html">Find a Jobs </a>
+                            <Link to="job-listing">Find a Jobs </Link>
                           </li>
                           <li>
-                            <a href="about.html">About</a>
+                            <Link to="contact-us">About</Link>
                           </li>
                           <li>
-                            <a href="#">Page</a>
+                            <Link to="/">Page</Link>
                             <ul className="submenu">
                               <li>
-                                <a href="blog.html">Blog</a>
+                                <Link to="blog">Blog</Link>
                               </li>
                               <li>
-                                <a href="single-blog.html">Blog Details</a>
+                                <Link to="single-blog">Blog Details</Link>
                               </li>
                               <li>
-                                <a href="elements.html">Elements</a>
+                                <Link to="elements">Elements</Link>
                               </li>
                               <li>
-                                <a href="job_details.html">job Details</a>
+                                <Link to="job-details">job Details</Link>
                               </li>
                             </ul>
                           </li>
                           <li>
-                            <a href="contact.html">Contact</a>
+                            <Link to="contact-us">Contact</Link>
                           </li>
                         </ul>
                       </nav>
                     </div>
                     {/* Header-btn  */}
                     <div className="header-btn d-none f-right d-lg-block">
-                      <a href="#" className="btn head-btn1">
+                      <Link to="/register" className="btn head-btn1">
                         Register
-                      </a>
-                      <a href="#" className="btn head-btn2">
+                      </Link>
+                      <Link to="/login" className="btn head-btn2">
                         Login
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
