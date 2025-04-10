@@ -1,23 +1,60 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../features/auth/authSlice";
+import { toggleLoader } from "../hooks/CommonFunctions";
+import { toast } from "react-toastify";
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [name, setName] = useState("sourabh");
+  const [email, setEmail] = useState("sourabh@saglus.com");
+  const [password, setPassword] = useState("123456");
+  const [confirmPassword, setConfirmPassword] = useState("123456");
+
+  const { isLoading, error, token, user } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
-    // Add signup logic here
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    dispatch(
+      registerUser({
+        email: email,
+        name: name,
+        password: password,
+        role: "job_seeker",
+      })
+    ).then((res) => {
+      console.log("====================================");
+      console.log(res);
+      console.log("====================================");
+    });
   };
+
+  useEffect(() => {
+    if (user) {
+      if (location.pathname === "/register") {
+        toast.info("Already logged in");
+      }
+      navigate("/");
+    }
+  }, [user]);
+
+  // useEffect(() => {
+  //   if (error) {
+  //     toast.error(error.message || "Login failed");
+  //   }
+  // }, [error]);
+
+  // useEffect(() => {
+  //   toggleLoader(isLoading);
+  // }, [isLoading]);
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">

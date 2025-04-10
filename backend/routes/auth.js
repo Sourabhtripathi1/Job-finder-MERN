@@ -34,11 +34,14 @@ router.post(
       user = new User({ name, email, password: hashedPassword, role });
       await user.save();
 
-      const payload = { user: { id: user.id, role: user.role } };
-      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+      const payload = { user: { user } };
+      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
 
       res.json({ token });
     } catch (error) {
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
       res.status(500).send("Server Error");
     }
   }
@@ -65,7 +68,7 @@ router.post(
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
-      const payload = { user: { id: user.id, role: user.role } };
+      const payload = { user: { user } };
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
       res.json({ token });

@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}api/auth`;
 
 // 📌 Async Action: Register User
 export const registerUser = createAsyncThunk(
@@ -9,8 +10,13 @@ export const registerUser = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/register`, userData);
-      localStorage.setItem("token", response.data.token);
-      return response.data;
+      const { token } = response.data;
+      localStorage.setItem("token", token);
+
+      // Decode token to extract user info
+      const decoded = jwtDecode(token);
+
+      return { token, user: decoded.user }; // 👈 return both token and user
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -23,8 +29,13 @@ export const loginUser = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/login`, userData);
-      localStorage.setItem("token", response.data.token);
-      return response.data;
+      const { token } = response.data;
+      localStorage.setItem("token", token);
+
+      // Decode token to extract user info
+      const decoded = jwtDecode(token);
+
+      return { token, user: decoded.user }; // 👈 return both token and user
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -55,6 +66,7 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.token = action.payload.token;
+        state.user = action.payload.user;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -66,6 +78,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.token = action.payload.token;
+        state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

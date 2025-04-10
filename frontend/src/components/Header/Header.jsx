@@ -1,7 +1,25 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isLoading, error, token, user } = useSelector((state) => state.auth);
+
+  console.log("====================================");
+  console.log(user);
+  console.log("====================================");
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged out successfully!");
+    navigate("/login");
+  };
+
   return (
     <>
       {/* Preloader Start  */}
@@ -69,14 +87,27 @@ const Header = () => {
                       </nav>
                     </div>
                     {/* Header-btn  */}
-                    <div className="header-btn d-none f-right d-lg-block">
-                      <Link to="/register" className="btn head-btn1">
-                        Register
-                      </Link>
-                      <Link to="/login" className="btn head-btn2">
-                        Login
-                      </Link>
-                    </div>
+                    {user && token ? (
+                      <>
+                        <div className="header-btn d-none f-right d-lg-block">
+                          <div className="circle-icon bg-secondary text-white mr-2 mb-2">
+                            S
+                          </div>
+                          <button onClick={handleLogout}>Logout</button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="header-btn d-none f-right d-lg-block">
+                          <Link to="/register" className="btn head-btn1">
+                            Register
+                          </Link>
+                          <Link to="/login" className="btn head-btn2">
+                            Login
+                          </Link>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
                 {/* Mobile Menu  */}

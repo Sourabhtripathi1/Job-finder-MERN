@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import $ from "jquery";
 import "../assets/js/jquery.scrollUp.min.js";
+import { toggleLoader } from "./CommonFunctions.js";
 
 export const useInitializeTheme = () => {
   const location = useLocation(); // Get current route
@@ -9,23 +10,7 @@ export const useInitializeTheme = () => {
   useEffect(() => {
     console.log("Theme initialized for:", location.pathname);
 
-    const hideLoader = () => {
-      console.log("main.js file loaded");
-      $("#preloader-active").delay(200).fadeOut("slow");
-      $("body").delay(200).css({
-        overflow: "visible",
-      });
-    };
-
-    const showLoader = () => {
-      console.log("Loader started");
-      $("#preloader-active").fadeIn("slow");
-      $("body").css({
-        overflow: "hidden",
-      });
-    };
-
-    hideLoader();
+    toggleLoader();
 
     // Set data background
     $("[data-background]").each(function () {

@@ -12,6 +12,8 @@ import JobDetails from "./pages/JobDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import URLNotFound from "./pages/URLNotFound";
 import useInitializeTheme from "./hooks/useInitializeTheme";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   useInitializeTheme(); // ✅ Theme updates automatically on route change
@@ -40,6 +42,17 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <ToastContainer
+        position="top-center"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
   );
 }

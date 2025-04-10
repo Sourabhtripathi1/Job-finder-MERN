@@ -1,15 +1,50 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../features/auth/authSlice";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("sourabh@saglus.com");
+  const [password, setPassword] = useState("123456");
+
+  const { isLoading, error, token, user } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    dispatch(
+      loginUser({
+        email: email,
+        password: password,
+        role: "job_seeker",
+      })
+    ).then((res) => {
+      if (res.type === "auth/login/fulfilled") {
+        toast.success("Login successful!");
+        navigate("/");
+      } else if (res.type === "auth/login/rejected") {
+        toast.error(res?.error?.message || "Login failed");
+        // navigate("/login");
+      }
+
+      console.log("RESA====================================");
+      console.log(res);
+      console.log("====================================");
+    });
   };
+
+  useEffect(() => {
+    if (user) {
+      if (location.pathname === "/login") {
+        toast.info("Already logged in");
+      }
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100 bg-light">
