@@ -10,10 +10,6 @@ const Header = () => {
 
   const { isLoading, error, token, user } = useSelector((state) => state.auth);
 
-  console.log("====================================");
-  console.log(user);
-  console.log("====================================");
-
   const handleLogout = () => {
     dispatch(logout());
     toast.success("Logged out successfully!");

@@ -8,8 +8,6 @@ export const useInitializeTheme = () => {
   const location = useLocation(); // Get current route
 
   useEffect(() => {
-    console.log("Theme initialized for:", location.pathname);
-
     toggleLoader();
 
     // Set data background
@@ -41,10 +39,6 @@ export const useInitializeTheme = () => {
       scrollText: '<i class="ti-arrow-up"></i>', // Text for element
       activeOverlay: false, // CSS color for active overlay
     });
-
-    return () => {
-      console.log("Cleaning up before route change...");
-    };
   }, [location.pathname]); // Re-run effect on route change
 };
 

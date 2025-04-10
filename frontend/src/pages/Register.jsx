@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/auth/authSlice";
-import { toggleLoader } from "../hooks/CommonFunctions";
 import { toast } from "react-toastify";
 
 function Register() {
@@ -31,9 +30,13 @@ function Register() {
         role: "job_seeker",
       })
     ).then((res) => {
-      console.log("====================================");
-      console.log(res);
-      console.log("====================================");
+      if (res.type === "auth/register/fulfilled") {
+        toast.success("Register successful!");
+        navigate("/");
+      } else {
+        toast.error(res?.error?.message || "Register failed");
+        // navigate("/login");
+      }
     });
   };
 

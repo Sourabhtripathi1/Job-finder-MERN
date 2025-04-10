@@ -27,13 +27,12 @@ const Login = () => {
         toast.success("Login successful!");
         navigate("/");
       } else {
+        console.log("====================================");
+        console.log(res);
+        console.log("====================================");
         toast.error(res?.error?.message || "Login failed");
         // navigate("/login");
       }
-
-      console.log("RESA====================================");
-      console.log(res);
-      console.log("====================================");
     });
   };
 
@@ -44,17 +43,17 @@ const Login = () => {
       }
       navigate("/");
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100 bg-light">
       <div
-        className="card shadow p-3 "
+        className="card shadow p-3"
         style={{
           width: "100%",
           maxWidth: "600px",
-          padding: "3rem",
           margin: "4rem",
+          padding: "3rem",
         }}>
         <h3 className="text-center mb-5">Login</h3>
         <form onSubmit={handleSubmit}>
@@ -88,14 +87,17 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">
-            Login
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="mt-3 text-center">
           Don't have an account?{" "}
           <Link to="/register" className="btn genric-btn circle arrow">
-            Register{" "}
+            Register
           </Link>
         </p>
       </div>

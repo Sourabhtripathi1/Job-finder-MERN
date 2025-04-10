@@ -1,61 +1,63 @@
+// src/features/auth/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}api/auth`;
 
-// 📌 Async Action: Register User
+// 📌 Register User
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/register`, userData);
       const { token } = response.data;
-      localStorage.setItem("token", token);
+      Cookies.set("token", token, { expires: 7 });
 
-      // Decode token to extract user info
       const decoded = jwtDecode(token);
-
-      return { token, user: decoded.user }; // 👈 return both token and user
+      return { token, user: decoded.user };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
-// 📌 Async Action: Login User
+// 📌 Login User
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post(`${API_URL}/login`, userData);
       const { token } = response.data;
-      localStorage.setItem("token", token);
+      Cookies.set("token", token, { expires: 7 });
 
-      // Decode token to extract user info
       const decoded = jwtDecode(token);
-
-      return { token, user: decoded.user }; // 👈 return both token and user
+      return { token, user: decoded.user };
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }
 );
 
-// 📌 Redux Slice
+// 📌 Auth Slice
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-    token: localStorage.getItem("token") || null,
+    token: Cookies.get("token") || null,
     isLoading: false,
     error: null,
   },
   reducers: {
     logout: (state) => {
-      localStorage.removeItem("token");
+      Cookies.remove("token");
       state.user = null;
       state.token = null;
+    },
+    setUserFromToken: (state, action) => {
+      state.token = action.payload.token;
+      state.user = action.payload.user;
     },
   },
   extraReducers: (builder) => {
@@ -87,5 +89,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setUserFromToken } = authSlice.actions;
 export default authSlice.reducer;
