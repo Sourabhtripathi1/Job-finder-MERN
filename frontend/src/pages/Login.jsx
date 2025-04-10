@@ -26,7 +26,7 @@ const Login = () => {
       if (res.type === "auth/login/fulfilled") {
         toast.success("Login successful!");
         navigate("/");
-      } else if (res.type === "auth/login/rejected") {
+      } else {
         toast.error(res?.error?.message || "Login failed");
         // navigate("/login");
       }
