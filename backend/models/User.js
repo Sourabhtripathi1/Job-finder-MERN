@@ -11,8 +11,17 @@ const UserSchema = new mongoose.Schema({
   },
   phone: { type: String },
   location: { type: String },
-  resume: { type: String }, // Resume file URL (Cloudinary/AWS S3)
-  company: { type: String }, // Only for employers
+  profile: {
+    bio: { type: String },
+    skills: [{ type: String }],
+    resume: { type: String }, // URL to resume file
+    resumeOriginalName: { type: String },
+    company: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
+    profilePhoto: {
+      type: String,
+      default: "",
+    },
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

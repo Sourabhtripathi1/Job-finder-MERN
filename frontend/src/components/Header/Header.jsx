@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -85,11 +85,19 @@ const Header = () => {
                     {/* Header-btn  */}
                     {user && token ? (
                       <>
-                        <div className="header-btn d-none f-right d-lg-block">
-                          <div className="circle-icon bg-secondary text-white mr-2 mb-2">
-                            S
-                          </div>
-                          <button onClick={handleLogout}>Logout</button>
+                        <div className="header-btn d-none f-right d-lg-block main-menu">
+                          <ul>
+                            <li style={{ padding: "20px" }}>
+                              <div className="circle-icon bg-secondary text-white m-2  profile-image">
+                                S
+                              </div>
+                              <ul className="submenu">
+                                <li>
+                                  <Link onClick={handleLogout}> Logout </Link>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
                         </div>
                       </>
                     ) : (

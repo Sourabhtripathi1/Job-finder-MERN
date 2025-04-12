@@ -8,8 +8,7 @@ export const useInitializeTheme = () => {
   const location = useLocation(); // Get current route
 
   useEffect(() => {
-    toggleLoader();
-
+    toggleLoader(true);
     // Set data background
     $("[data-background]").each(function () {
       $(this).css(

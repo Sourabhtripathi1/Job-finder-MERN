@@ -1,10 +1,11 @@
 // src/features/auth/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}api/auth`;
+const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}auth`;
 
 // 📌 Register User
 export const registerUser = createAsyncThunk(
@@ -18,6 +19,7 @@ export const registerUser = createAsyncThunk(
       const decoded = jwtDecode(token);
       return { token, user: decoded.user };
     } catch (error) {
+      toast.error(error.response.data.msg);
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
@@ -35,6 +37,7 @@ export const loginUser = createAsyncThunk(
       const decoded = jwtDecode(token);
       return { token, user: decoded.user };
     } catch (error) {
+      toast.error(error.response.data.msg);
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }

@@ -10,6 +10,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("sourabh@saglus.com");
   const [password, setPassword] = useState("123456");
+  const [role, setrole] = useState("job_seeker");
 
   const { isLoading, error, token, user } = useSelector((state) => state.auth);
 
@@ -20,18 +21,12 @@ const Login = () => {
       loginUser({
         email: email,
         password: password,
-        role: "job_seeker",
+        role: role,
       })
     ).then((res) => {
       if (res.type === "auth/login/fulfilled") {
         toast.success("Login successful!");
         navigate("/");
-      } else {
-        console.log("====================================");
-        console.log(res);
-        console.log("====================================");
-        toast.error(res?.error?.message || "Login failed");
-        // navigate("/login");
       }
     });
   };
@@ -86,7 +81,37 @@ const Login = () => {
               placeholder="Enter your password"
             />
           </div>
+          <div className="mb-3">
+            <label className="form-label">Role</label>
 
+            <div>
+              <input
+                type="radio"
+                id="job_seeker"
+                name="role"
+                value="job_seeker"
+                checked={role === "job_seeker"}
+                onChange={(e) => setrole(e.target.value)}
+              />
+              <label htmlFor="job_seeker" className="ms-2">
+                Job Seeker
+              </label>
+            </div>
+
+            <div>
+              <input
+                type="radio"
+                id="job_provider"
+                name="role"
+                value="job_provider"
+                checked={role === "job_provider"}
+                onChange={(e) => setrole(e.target.value)}
+              />
+              <label htmlFor="job_provider" className="ms-2">
+                Job Provider
+              </label>
+            </div>
+          </div>
           <button
             type="submit"
             className="btn btn-primary w-100"

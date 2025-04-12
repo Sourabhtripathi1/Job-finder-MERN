@@ -2,7 +2,9 @@ import $ from "jquery";
 
 export const toggleLoader = (show = false) => {
   if (show) {
-    $("#preloader-active").fadeIn("slow");
+    $("#preloader-active").css({
+      display: "block",
+    });
     $("body").css({
       overflow: "hidden",
     });

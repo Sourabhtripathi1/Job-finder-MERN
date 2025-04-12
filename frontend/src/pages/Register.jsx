@@ -12,6 +12,7 @@ function Register() {
   const [email, setEmail] = useState("sourabh@saglus.com");
   const [password, setPassword] = useState("123456");
   const [confirmPassword, setConfirmPassword] = useState("123456");
+  const [role, setrole] = useState("job_seeker");
 
   const { isLoading, error, token, user } = useSelector((state) => state.auth);
 
@@ -27,15 +28,12 @@ function Register() {
         email: email,
         name: name,
         password: password,
-        role: "job_seeker",
+        role: role,
       })
     ).then((res) => {
       if (res.type === "auth/register/fulfilled") {
         toast.success("Register successful!");
         navigate("/");
-      } else {
-        toast.error(res?.error?.message || "Register failed");
-        // navigate("/login");
       }
     });
   };
@@ -48,16 +46,6 @@ function Register() {
       navigate("/");
     }
   }, [user]);
-
-  // useEffect(() => {
-  //   if (error) {
-  //     toast.error(error.message || "Login failed");
-  //   }
-  // }, [error]);
-
-  // useEffect(() => {
-  //   toggleLoader(isLoading);
-  // }, [isLoading]);
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
@@ -125,6 +113,38 @@ function Register() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Role</label>
+
+            <div>
+              <input
+                type="radio"
+                id="job_seeker"
+                name="role"
+                value="job_seeker"
+                checked={role === "job_seeker"}
+                onChange={(e) => setrole(e.target.value)}
+              />
+              <label htmlFor="job_seeker" className="ms-2">
+                Job Seeker
+              </label>
+            </div>
+
+            <div>
+              <input
+                type="radio"
+                id="job_provider"
+                name="role"
+                value="job_provider"
+                checked={role === "job_provider"}
+                onChange={(e) => setrole(e.target.value)}
+              />
+              <label htmlFor="job_provider" className="ms-2">
+                Job Provider
+              </label>
+            </div>
           </div>
 
           <button type="submit" className="btn btn-success w-100">

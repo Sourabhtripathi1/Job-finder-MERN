@@ -1,46 +1,51 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import "nice-select2/dist/css/nice-select2.css";
 import NiceSelect from "nice-select2";
+import { toggleLoader } from "../../../hooks/CommonFunctions";
 
-const CitySelect = ({ onSelectChange = null }) => {
+const CitySelect = ({ onSelectChange = () => { } }) => {
   const selectRef = useRef(null);
+  const [cities, setCities] = useState([]);
 
   useEffect(() => {
-    loadCities();
-    loadSelect();
+    toggleLoader(true);
+    axios
+      .get(`${import.meta.env.VITE_APP_BACKEND_URI}utility/city-list`)
+      .then((res) => {
+        setCities(res.data);
+        toggleLoader();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
-  const loadSelect = () => {
-    if (selectRef.current) {
-      // Remove existing instance if it exists
-      const prevNiceSelect = selectRef.current.nextElementSibling;
-      if (prevNiceSelect && prevNiceSelect.classList.contains("nice-select")) {
-        prevNiceSelect.remove();
+  useEffect(() => {
+    if (cities.length > 0 && selectRef.current) {
+      // Destroy previous NiceSelect instance
+      const prev = selectRef.current.nextElementSibling;
+      if (prev && prev.classList.contains("nice-select")) {
+        prev.remove();
       }
 
-      // Initialize NiceSelect only once
       new NiceSelect(selectRef.current, { searchable: true });
       selectRef.current.style.display = "none";
     }
-  };
-
-  const loadCities = () => {
-    console.log("cities loading");
-  };
+  }, [cities]);
 
   const handleChange = (event) => {
     onSelectChange(event.target.value);
   };
 
   return (
-    <>
-      <select ref={selectRef} name="select" onChange={handleChange}>
-        <option value="BD">Location BD</option>
-        <option value="PK">Location PK</option>
-        <option value="US">Location US</option>
-        <option value="UK">Location UK</option>
-      </select>
-    </>
+    <select ref={selectRef} onChange={handleChange} placeholder="Select city">
+      {cities.map((city) => (
+        <option key={city._id} value={city._id}>
+          {city.name}
+        </option>
+      ))}
+    </select>
   );
 };
 

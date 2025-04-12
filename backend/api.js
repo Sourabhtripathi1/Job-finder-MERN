@@ -2,15 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const User = require("./models/User");
-const Job = require("./models/Job");
-const Application = require("./models/Application");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/utility", require("./routes/utilities"));
+app.use("/api/job", require("./routes/job"));
+app.use("/api/application", require("./routes/application"));
+app.use("/api/company", require("./routes/company"));
 
 mongoose
   .connect(process.env.MONGODB_URI)

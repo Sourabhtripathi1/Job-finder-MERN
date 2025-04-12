@@ -39,10 +39,7 @@ router.post(
 
       res.json({ token });
     } catch (error) {
-      console.log("====================================");
-      console.log(error);
-      console.log("====================================");
-      res.status(500).send("Server Error");
+      res.status(500).send({ msg: "Server Error", error: error });
     }
   }
 );
@@ -73,7 +70,7 @@ router.post(
 
       res.json({ token });
     } catch (error) {
-      res.status(500).send("Server Error");
+      res.status(500).send({ msg: "Server Error", error: error });
     }
   }
 );
@@ -90,7 +87,7 @@ router.get("/me", async (req, res) => {
 
     res.json(user);
   } catch (error) {
-    res.status(401).json({ msg: "Invalid token" });
+    res.status(500).send({ msg: "Server Error", error: error });
   }
 });
 
