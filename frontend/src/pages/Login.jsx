@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
+import { toggleLoader } from "../hooks/CommonFunctions";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const Login = () => {
   };
 
   useEffect(() => {
+    toggleLoader();
     if (user) {
       if (location.pathname === "/login") {
         toast.info("Already logged in");

@@ -10,7 +10,7 @@ export const toggleLoader = (show = false) => {
     });
   } else {
     $("#preloader-active").delay(200).fadeOut("slow");
-    $("body").delay(200).css({
+    $("body").delay(100).css({
       overflow: "visible",
     });
   }

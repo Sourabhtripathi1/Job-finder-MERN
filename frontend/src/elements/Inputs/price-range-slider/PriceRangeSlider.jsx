@@ -5,10 +5,10 @@ import "ion-rangeslider/js/ion.rangeSlider.min.js";
 
 const PriceRangeSlider = ({
   min = 0,
-  max = 100,
+  max = 50,
   from = 0,
-  to = 50,
-  onChange,
+  to = 10,
+  onSliderChange = () => {},
 }) => {
   const sliderRef = useRef(null);
   const inputFromRef = useRef(null);
@@ -43,8 +43,8 @@ const PriceRangeSlider = ({
       $inputFrom.prop("value", data.from);
       $inputTo.prop("value", data.to);
 
-      if (onChange) {
-        onchange({ max: data.to, min: data.from });
+      if (onSliderChange) {
+        onSliderChange({ max: data.to, min: data.from });
       }
     }
 

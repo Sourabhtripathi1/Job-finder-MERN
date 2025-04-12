@@ -3,9 +3,9 @@ import axios from "axios";
 import "nice-select2/dist/css/nice-select2.css";
 import NiceSelect from "nice-select2";
 
-const JobCategorySelect = ({ onSelectChange = null }) => {
+const JobCategorySelect = ({ onSelectChange = () => {} }) => {
   const selectRef = useRef(null);
-  const [category, setcategory] = useState([])
+  const [category, setcategory] = useState([]);
 
   useEffect(() => {
     axios
@@ -30,7 +30,7 @@ const JobCategorySelect = ({ onSelectChange = null }) => {
       new NiceSelect(selectRef.current, { searchable: true });
       selectRef.current.style.display = "none";
     }
-  }, [category])
+  }, [category]);
 
   const handleChange = (event) => {
     onSelectChange(event.target.value);
@@ -38,9 +38,15 @@ const JobCategorySelect = ({ onSelectChange = null }) => {
 
   return (
     <>
-      <select ref={selectRef} name="select" onChange={handleChange} placholder="Select Job Category">
+      <select
+        ref={selectRef}
+        name="select"
+        onChange={handleChange}
+        placholder="Select Job Category">
         {category.map((item) => (
-          <option key={item._id} value={item._id}>{item.name}</option>
+          <option key={item._id} value={item._id}>
+            {item.name}
+          </option>
         ))}
       </select>
     </>

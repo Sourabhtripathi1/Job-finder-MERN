@@ -1,11 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import CitySelect from "../elements/Inputs/selectBox/CitySelect";
 import JobCategorySelect from "../elements/Inputs/selectBox/JobCategorySelect";
 import CommonSelect from "../elements/Inputs/selectBox/CommonSelect";
 import PriceRangeSlider from "../elements/Inputs/price-range-slider/PriceRangeSlider";
 import JobListElement from "../elements/Functionals/JobListElement.jsx/JobListElement";
+import { useSearchParams } from "react-router-dom";
 
 const JobListing = () => {
+  const navigate = useNavigate();
+
+  const [Category, setCategory] = useState(null);
+  const [city, setcity] = useState(null);
+  const [sortBy, setsortBy] = useState(null);
+  const [salary, setsalary] = useState({ max: 0, min: 10 });
+  const [jobTypes, setJobTypes] = useState({
+    fullTime: false,
+    partTime: false,
+    remote: false,
+    freelance: false,
+  });
+  const [experience, setExperience] = useState({ max: 0, min: 0 });
+
+  const handleJobTypeChange = (e) => {
+    const { name, checked } = e.target;
+    setJobTypes((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
+  };
+
+  const [searchParams] = useSearchParams();
+
   const sortByOptions = [
     {
       value: "title",
@@ -16,6 +42,26 @@ const JobListing = () => {
       title: "Posted date",
     },
   ];
+
+  const filterJobs = () => {
+    console.log({
+      Category,
+      city,
+      sortBy,
+      jobTypes,
+      experience,
+      salary,
+    });
+  };
+
+  useEffect(() => {
+    console.log(searchParams);
+    filterJobs();
+  }, [searchParams]);
+
+  useEffect(() => {
+    filterJobs();
+  }, [Category, sortBy, jobTypes, city, experience, salary]);
 
   return (
     <>
@@ -72,7 +118,7 @@ const JobListing = () => {
                   </div>
                   {/* Select job items start */}
                   <div className="select-job-items2">
-                    <JobCategorySelect />
+                    <JobCategorySelect onSelectChange={setCategory} />
                   </div>
                   {/*  Select job items End*/}
                   {/* select-Categories start */}
@@ -82,23 +128,42 @@ const JobListing = () => {
                     </div>
                     <label className="container">
                       Full Time
-                      <input type="checkbox" />
-                      <span className="checkmark" />
+                      <input
+                        type="checkbox"
+                        name="fullTime"
+                        onChange={handleJobTypeChange}
+                      />
+                      <span className="checkmark" checked={jobTypes.fullTime} />
                     </label>
                     <label className="container">
                       Part Time
-                      <input type="checkbox" defaultChecked="checked active" />
-                      <span className="checkmark" />
+                      <input
+                        type="checkbox"
+                        name="partTime"
+                        onChange={handleJobTypeChange}
+                      />
+                      <span className="checkmark" checked={jobTypes.partTime} />
                     </label>
                     <label className="container">
                       Remote
-                      <input type="checkbox" />
-                      <span className="checkmark" />
+                      <input
+                        type="checkbox"
+                        name="remote"
+                        onChange={handleJobTypeChange}
+                      />
+                      <span className="checkmark" checked={jobTypes.remote} />
                     </label>
                     <label className="container">
                       Freelance
-                      <input type="checkbox" />
-                      <span className="checkmark" />
+                      <input
+                        type="checkbox"
+                        name="freelance"
+                        onChange={handleJobTypeChange}
+                      />
+                      <span
+                        className="checkmark"
+                        checked={jobTypes.freelance}
+                      />
                     </label>
                   </div>
                   {/* select-Categories End */}
@@ -110,40 +175,42 @@ const JobListing = () => {
                   </div>
                   {/* Select job items start */}
                   <div className="select-job-items2">
-                    <CitySelect onSelectChange={null} />
+                    <CitySelect onSelectChange={setcity} />
                   </div>
                   {/*  Select job items End*/}
                   {/* select-Categories start */}
                   <div className="select-Categories pt-80 pb-50">
                     <div className="small-section-tittle2">
-                      <h4>Experience</h4>
+                      <h4>Experience in years</h4>
                     </div>
-                    <label className="container">
-                      1-2 Years
-                      <input type="checkbox" />
-                      <span className="checkmark" />
-                    </label>
-                    <label className="container">
-                      2-3 Years
-                      <input type="checkbox" defaultChecked="checked active" />
-                      <span className="checkmark" />
-                    </label>
-                    <label className="container">
-                      3-6 Years
-                      <input type="checkbox" />
-                      <span className="checkmark" />
-                    </label>
-                    <label className="container">
-                      6-more..
-                      <input type="checkbox" />
-                      <span className="checkmark" />
-                    </label>
+                    <label className="">Min:</label>
+                    <input
+                      type="number"
+                      value={experience.min}
+                      onChange={(e) =>
+                        setExperience((prev) => ({
+                          ...prev,
+                          min: e.target.value,
+                        }))
+                      }
+                    />
+
+                    <label className="">Max: </label>
+                    <input
+                      type="number"
+                      value={experience.max}
+                      onChange={(e) =>
+                        setExperience((prev) => ({
+                          ...prev,
+                          max: e.target.value,
+                        }))
+                      }
+                    />
                   </div>
                   {/* select-Categories End */}
                 </div>
                 {/* single three */}
-                <div className="single-listing">
-                  {/* select-Categories start */}
+                {/* <div className="single-listing">
                   <div className="select-Categories pb-50">
                     <div className="small-section-tittle2">
                       <h4>Posted Within</h4>
@@ -179,16 +246,15 @@ const JobListing = () => {
                       <span className="checkmark" />
                     </label>
                   </div>
-                  {/* select-Categories End */}
-                </div>
+                </div> */}
                 <div className="single-listing">
                   {/* Range Slider Start */}
                   <aside className="left_widgets">
                     <div className="small-section-tittle2">
-                      <h4>Filter Salary</h4>
+                      <h4>Filter Salary (in Lakhs)</h4>
                     </div>
                     <div className="widgets_inner">
-                      <PriceRangeSlider />
+                      <PriceRangeSlider onSliderChange={setsalary} />
                     </div>
                   </aside>
                   {/* Range Slider End */}
@@ -209,7 +275,10 @@ const JobListing = () => {
                         {/* Select job items start */}
                         <div className="select-job-items">
                           <span>Sort by</span>
-                          <CommonSelect options={sortByOptions} />
+                          <CommonSelect
+                            options={sortByOptions}
+                            onSelectChange={setsortBy}
+                          />
                         </div>
                         {/*  Select job items End*/}
                       </div>

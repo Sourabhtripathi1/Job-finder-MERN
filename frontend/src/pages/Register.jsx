@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
+import { toggleLoader } from "../hooks/CommonFunctions";
 
 function Register() {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ function Register() {
   };
 
   useEffect(() => {
+    toggleLoader();
     if (user) {
       if (location.pathname === "/register") {
         toast.info("Already logged in");
