@@ -1,7 +1,12 @@
-import React from "react";
-import Testimonials from "../components/Testimonials/Testimonials";
+import React, { useEffect } from "react";
+import Testimonials from "../../components/Testimonials/Testimonials";
+import { toggleLoader } from "../../hooks/CommonFunctions";
 
 const About = () => {
+  useEffect(() => {
+    toggleLoader();
+  }, []);
+
   return (
     <>
       {/* Hero Area Start*/}

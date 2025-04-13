@@ -9,8 +9,6 @@ const JobSearch = () => {
   const [jobTitle, setjobTitle] = useState("");
 
   const searchJob = () => {
-    console.log(selectedCity);
-
     navigate(`/job-listing?jobTitle=${jobTitle}&city=${selectedCity}`);
   };
 

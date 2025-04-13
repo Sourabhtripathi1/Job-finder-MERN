@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { toggleLoader } from "../../hooks/CommonFunctions";
 
 const ContactUs = () => {
+  useEffect(() => {
+    toggleLoader();
+  }, []);
+
   return (
     <section className="contact-section">
       <div className="container">

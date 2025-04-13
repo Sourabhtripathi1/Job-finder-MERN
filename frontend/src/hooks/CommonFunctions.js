@@ -5,9 +5,9 @@ export const toggleLoader = (show = false) => {
     $("#preloader-active").css({
       display: "block",
     });
-    $("body").css({
-      overflow: "hidden",
-    });
+    // $("body").css({
+    //   overflow: "hidden",
+    // });
   } else {
     $("#preloader-active").delay(200).fadeOut("slow");
     $("body").delay(100).css({

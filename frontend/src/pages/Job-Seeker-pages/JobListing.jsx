@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import CitySelect from "../elements/Inputs/selectBox/CitySelect";
-import JobCategorySelect from "../elements/Inputs/selectBox/JobCategorySelect";
-import CommonSelect from "../elements/Inputs/selectBox/CommonSelect";
-import PriceRangeSlider from "../elements/Inputs/price-range-slider/PriceRangeSlider";
-import JobListElement from "../elements/Functionals/JobListElement.jsx/JobListElement";
+import CitySelect from "../../elements/Inputs/selectBox/CitySelect";
+import JobCategorySelect from "../../elements/Inputs/selectBox/JobCategorySelect";
+import CommonSelect from "../../elements/Inputs/selectBox/CommonSelect";
+import PriceRangeSlider from "../../elements/Inputs/price-range-slider/PriceRangeSlider";
+import JobListElement from "../../elements/Functionals/JobListElement.jsx/JobListElement";
 import { useSearchParams } from "react-router-dom";
 
 const JobListing = () => {

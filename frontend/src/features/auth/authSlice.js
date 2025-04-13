@@ -17,10 +17,10 @@ export const registerUser = createAsyncThunk(
       Cookies.set("token", token, { expires: 7 });
 
       const decoded = jwtDecode(token);
-      return { token, user: decoded.user };
+      return { token, user: decoded }; // 🔁 return full decoded
     } catch (error) {
-      toast.error(error.response.data.msg);
-      return thunkAPI.rejectWithValue(error.response.data);
+      toast.error(error.response?.data?.msg || "Registration failed");
+      return thunkAPI.rejectWithValue(error.response?.data || {});
     }
   }
 );
@@ -35,10 +35,12 @@ export const loginUser = createAsyncThunk(
       Cookies.set("token", token, { expires: 7 });
 
       const decoded = jwtDecode(token);
-      return { token, user: decoded.user };
+      return { token, user: decoded }; // 🔁 return full decoded
     } catch (error) {
-      toast.error(error.response.data.msg);
-      return thunkAPI.rejectWithValue(error.response.data.msg);
+      toast.error(error.response?.data?.msg || "Login failed");
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.msg || "Login error"
+      );
     }
   }
 );
@@ -65,6 +67,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Register
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -72,11 +75,13 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -84,6 +89,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

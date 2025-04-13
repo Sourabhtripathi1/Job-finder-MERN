@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { toggleLoader } from "../../hooks/CommonFunctions";
 
 const URLNotFound = () => {
+  useEffect(() => {
+    toggleLoader();
+  }, [location.pathname]);
+
   return (
     <div className="slider-area ">
       <div className="slider-active">

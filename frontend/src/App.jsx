@@ -4,18 +4,21 @@ import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { setUserFromToken } from "./features/auth/authSlice"; // adjust path
-
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import JobListing from "./pages/JobListing";
-import About from "./pages/About";
-import ContactUs from "./pages/ContactUs";
-import JobDetails from "./pages/JobDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
-import URLNotFound from "./pages/URLNotFound";
+import Home from "./pages/Job-Seeker-pages/Home";
+import Login from "./pages/Common-pages/Login";
+import Register from "./pages/Common-pages/Register";
+import JobListing from "./pages/Job-Seeker-pages/JobListing";
+import About from "./pages/Common-pages/About";
+import ContactUs from "./pages/Common-pages/ContactUs";
+import JobDetails from "./pages/Job-Seeker-pages/JobDetails";
+import Jobs from "./pages/Employer-Pages/Jobs";
+import Dashboard from "./pages/Employer-Pages/Dashboard";
+import Company from "./pages/Employer-Pages/company";
+import Applications from "./pages/Employer-Pages/applications";
+import URLNotFound from "./pages/Common-pages/URLNotFound";
 import useInitializeTheme from "./hooks/useInitializeTheme";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -50,10 +53,34 @@ function App() {
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/job-details" element={<JobDetails />} />
           <Route
-            path="/dashboard"
+            path="/admin/dashboard"
             element={
               <ProtectedRoute>
-                <Home />
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/jobs"
+            element={
+              <ProtectedRoute>
+                <Jobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/company"
+            element={
+              <ProtectedRoute>
+                <Company />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/applications"
+            element={
+              <ProtectedRoute>
+                <Applications />
               </ProtectedRoute>
             }
           />

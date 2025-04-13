@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/auth/authSlice";
@@ -8,7 +8,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, error, token, user } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user?.user);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -49,47 +49,67 @@ const Header = () => {
                     {/* Main-menu  */}
                     <div className="main-menu">
                       <nav className="d-none d-lg-block">
-                        <ul id="navigation">
-                          <li>
-                            <Link to="/">Home</Link>
-                          </li>
-                          <li>
-                            <Link to="job-listing">Find a Jobs </Link>
-                          </li>
-                          <li>
-                            <Link to="contact-us">About</Link>
-                          </li>
-                          <li>
-                            <Link to="/">Page</Link>
-                            <ul className="submenu">
-                              <li>
-                                <Link to="blog">Blog</Link>
-                              </li>
-                              <li>
-                                <Link to="single-blog">Blog Details</Link>
-                              </li>
-                              <li>
-                                <Link to="elements">Elements</Link>
-                              </li>
-                              <li>
-                                <Link to="job-details">job Details</Link>
-                              </li>
-                            </ul>
-                          </li>
-                          <li>
-                            <Link to="contact-us">Contact</Link>
-                          </li>
-                        </ul>
+                        {user?.role == "employer" ? (
+                          <ul id="navigation">
+                            <li>
+                              <Link to="/">Home</Link>
+                            </li>
+                            <li>
+                              <Link to="/admin/dashboard">Dashboard</Link>
+                            </li>
+                            <li>
+                              <Link to="/admin/jobs">Jobs</Link>
+                            </li>
+                            <li>
+                              <Link to="/admin/company">Company</Link>
+                            </li>
+                            <li>
+                              <Link to="admin/applications">Applicants</Link>
+                            </li>
+                          </ul>
+                        ) : (
+                          <ul id="navigation">
+                            <li>
+                              <Link to="/">Home</Link>
+                            </li>
+                            <li>
+                              <Link to="job-listing">Find a Jobs </Link>
+                            </li>
+                            <li>
+                              <Link to="contact-us">About</Link>
+                            </li>
+                            <li>
+                              <Link to="/">Page</Link>
+                              <ul className="submenu">
+                                <li>
+                                  <Link to="blog">Blog</Link>
+                                </li>
+                                <li>
+                                  <Link to="single-blog">Blog Details</Link>
+                                </li>
+                                <li>
+                                  <Link to="elements">Elements</Link>
+                                </li>
+                                <li>
+                                  <Link to="job-details">job Details</Link>
+                                </li>
+                              </ul>
+                            </li>
+                            <li>
+                              <Link to="contact-us">Contact</Link>
+                            </li>
+                          </ul>
+                        )}
                       </nav>
                     </div>
                     {/* Header-btn  */}
-                    {user && token ? (
+                    {user ? (
                       <>
                         <div className="header-btn d-none f-right d-lg-block main-menu">
                           <ul>
                             <li style={{ padding: "20px" }}>
-                              <div className="circle-icon bg-secondary text-white m-2  profile-image">
-                                S
+                              <div className="circle-icon bg-secondary text-white m-2  profile-image ">
+                                {user?.name?.[0] || "U"}
                               </div>
                               <ul className="submenu">
                                 <li>

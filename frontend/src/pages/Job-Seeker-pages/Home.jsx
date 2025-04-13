@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import JobSearch from "../elements/Functionals/JobSearch/JobSearch";
-import Testimonials from "../components/Testimonials/Testimonials";
+import JobSearch from "../../elements/Functionals/JobSearch/JobSearch";
+import Testimonials from "../../components/Testimonials/Testimonials";
 
 const Home = () => {
   return (
