@@ -28,18 +28,23 @@ router.post(
       let user = await User.findOne({ email });
       if (user) return res.status(400).json({ msg: "User already exists" });
 
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-
+      const hashedPassword = await bcrypt.hash(password, 10);
       user = new User({ name, email, password: hashedPassword, role });
       await user.save();
 
       const payload = { user: { user } };
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
 
-      res.json({ token });
+      res
+        .status(200)
+        .cookie("token", token, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .json({ msg: "User registered successfully" });
     } catch (error) {
-      res.status(500).send({ msg: "Server Error", error: error });
+      res.status(500).json({ msg: "Server Error", error });
     }
   }
 );
@@ -60,34 +65,52 @@ router.post(
 
     try {
       const user = await User.findOne({ email });
-      if (!user) return res.status(400).json({ msg: "Invalid credentials" });
-
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+      if (!user || !(await bcrypt.compare(password, user.password)))
+        return res.status(400).json({ msg: "Invalid credentials" });
 
       const payload = { user: { user } };
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
-      res.json({ token });
+      res
+        .status(200)
+        .cookie("token", token, {
+          httpOnly: true,
+          sameSite: "strict",
+          maxAge: 24 * 60 * 60 * 1000,
+        })
+        .json({ msg: "Login successful" });
     } catch (error) {
-      res.status(500).send({ msg: "Server Error", error: error });
+      res.status(500).json({ msg: "Server Error", error });
     }
   }
 );
 
+// 📌 Logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+  });
+  res.status(200).json({ msg: "Logged out" });
+});
+
 // 📌 Get User Profile (Protected Route)
 router.get("/me", async (req, res) => {
   try {
-    const token = req.header("Authorization");
+    const token = req?.cookies?.token;
+
     if (!token)
       return res.status(401).json({ msg: "No token, authorization denied" });
 
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.user.id).select("-password");
 
-    res.json(user);
+    // const user = await User.findById(decoded.user.user._id).select("-password");
+    // res.json(user);
+    res.json(decoded?.user?.user);
   } catch (error) {
-    res.status(500).send({ msg: "Server Error", error: error });
+    console.log(error);
+
+    res.status(500).send({ msg: "Server Error", error });
   }
 });
 

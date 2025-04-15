@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import { setUserFromToken } from "./features/auth/authSlice"; // adjust path
+import { loadUser } from "./features/auth/authSlice"; // adjust path
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -26,17 +25,13 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   useInitializeTheme(); // ✅ Theme updates automatically on route change
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        dispatch(setUserFromToken({ token, user: decoded.user }));
-      } catch (err) {
-        Cookies.remove("token"); // remove invalid token
-      }
+    try {
+      // dispatch(loadUser());
+    } catch (err) {
+      Cookies.remove("token"); // remove invalid token
     }
   }, []);
 

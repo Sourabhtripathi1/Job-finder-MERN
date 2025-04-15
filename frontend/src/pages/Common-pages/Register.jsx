@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../features/auth/authSlice";
+import { registerUser, loadUser } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import { toggleLoader } from "../../hooks/CommonFunctions";
 
 function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [name, setName] = useState("sourabh");
   const [email, setEmail] = useState("sourabh@saglus.com");
   const [password, setPassword] = useState("123456");
   const [confirmPassword, setConfirmPassword] = useState("123456");
-  const [role, setrole] = useState("job_seeker");
+  const [role, setRole] = useState("job_seeker");
 
-  const { isLoading, error, token, user } = useSelector((state) => state.auth);
+  const { isLoading, user } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,13 +27,14 @@ function Register() {
 
     dispatch(
       registerUser({
-        email: email,
-        name: name,
-        password: password,
-        role: role,
+        email,
+        name,
+        password,
+        role,
       })
     ).then((res) => {
       if (res.type === "auth/register/fulfilled") {
+        dispatch(loadUser()); // Load user from server using cookie
         toast.success("Register successful!");
         navigate("/");
       }
@@ -127,7 +129,7 @@ function Register() {
                 name="role"
                 value="job_seeker"
                 checked={role === "job_seeker"}
-                onChange={(e) => setrole(e.target.value)}
+                onChange={(e) => setRole(e.target.value)}
               />
               <label htmlFor="job_seeker" className="ms-2">
                 Job Seeker
@@ -141,7 +143,7 @@ function Register() {
                 name="role"
                 value="employer"
                 checked={role === "employer"}
-                onChange={(e) => setrole(e.target.value)}
+                onChange={(e) => setRole(e.target.value)}
               />
               <label htmlFor="employer" className="ms-2">
                 Job Provider
@@ -149,14 +151,17 @@ function Register() {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-success w-100">
-            Create Account
+          <button
+            type="submit"
+            className="btn btn-success w-100"
+            disabled={isLoading}>
+            {isLoading ? "Creating..." : "Create Account"}
           </button>
         </form>
         <p className="mt-3 text-center">
           Already have an account?{" "}
           <Link to="/login" className="btn genric-btn circle arrow">
-            Login{" "}
+            Login
           </Link>
         </p>
       </div>

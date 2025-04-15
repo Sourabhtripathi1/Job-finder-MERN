@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../features/auth/authSlice";
+import { loginUser, loadUser } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import { toggleLoader } from "../../hooks/CommonFunctions";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [email, setEmail] = useState("sourabh@saglus.com");
   const [password, setPassword] = useState("123456");
-  const [role, setrole] = useState("job_seeker");
+  const [role, setRole] = useState("job_seeker");
 
-  const { isLoading, error, token, user } = useSelector((state) => state.auth);
+  const { isLoading, user } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,6 +27,7 @@ const Login = () => {
       })
     ).then((res) => {
       if (res.type === "auth/login/fulfilled") {
+        dispatch(loadUser()); // Load user after login (cookie-based auth)
         toast.success("Login successful!");
         navigate("/");
       }
@@ -34,6 +36,7 @@ const Login = () => {
 
   useEffect(() => {
     toggleLoader();
+    // If already logged in, redirect
     if (user) {
       if (location.pathname === "/login") {
         toast.info("Already logged in");
@@ -83,9 +86,9 @@ const Login = () => {
               placeholder="Enter your password"
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Role</label>
-
             <div>
               <input
                 type="radio"
@@ -93,7 +96,7 @@ const Login = () => {
                 name="role"
                 value="job_seeker"
                 checked={role === "job_seeker"}
-                onChange={(e) => setrole(e.target.value)}
+                onChange={(e) => setRole(e.target.value)}
               />
               <label htmlFor="job_seeker" className="ms-2">
                 Job Seeker
@@ -107,13 +110,14 @@ const Login = () => {
                 name="role"
                 value="employer"
                 checked={role === "employer"}
-                onChange={(e) => setrole(e.target.value)}
+                onChange={(e) => setRole(e.target.value)}
               />
               <label htmlFor="employer" className="ms-2">
                 Job Provider
               </label>
             </div>
           </div>
+
           <button
             type="submit"
             className="btn btn-primary w-100"
