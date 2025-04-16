@@ -27,8 +27,7 @@ const Login = () => {
       })
     ).then((res) => {
       if (res.type === "auth/login/fulfilled") {
-        dispatch(loadUser()); // Load user after login (cookie-based auth)
-        toast.success("Login successful!");
+        // dispatch(loadUser()); // Load user after login (cookie-based auth)
         navigate("/");
       }
     });

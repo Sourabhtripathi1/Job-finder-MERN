@@ -34,8 +34,7 @@ function Register() {
       })
     ).then((res) => {
       if (res.type === "auth/register/fulfilled") {
-        dispatch(loadUser()); // Load user from server using cookie
-        toast.success("Register successful!");
+        // dispatch(loadUser()); // Load user from server using cookie
         navigate("/");
       }
     });

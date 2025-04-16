@@ -38,7 +38,7 @@ router.post(
       res
         .status(200)
         .cookie("token", token, {
-          httpOnly: true,
+          // httpOnly: true,
           sameSite: "strict",
           maxAge: 24 * 60 * 60 * 1000,
         })
@@ -55,18 +55,27 @@ router.post(
   [
     check("email", "Enter a valid email").isEmail(),
     check("password", "Password is required").exists(),
+    check(
+      "role",
+      "Role is required and must be either 'job_seeker' or 'employer'"
+    )
+      .notEmpty()
+      .isIn(["job_seeker", "employer"]),
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
 
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
     try {
       const user = await User.findOne({ email });
       if (!user || !(await bcrypt.compare(password, user.password)))
         return res.status(400).json({ msg: "Invalid credentials" });
+
+      if (user.role !== role)
+        return res.status(403).json({ msg: "Role mismatch" });
 
       const payload = { user: { user } };
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
@@ -74,7 +83,7 @@ router.post(
       res
         .status(200)
         .cookie("token", token, {
-          httpOnly: true,
+          // httpOnly: true,
           sameSite: "strict",
           maxAge: 24 * 60 * 60 * 1000,
         })

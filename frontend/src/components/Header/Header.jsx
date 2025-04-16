@@ -12,12 +12,11 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(loadUser());
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     dispatch(logout()).then((res) => {
       if (res.type === "auth/logout/fulfilled") {
-        toast.success("Logged out successfully!");
         navigate("/login");
       }
     });

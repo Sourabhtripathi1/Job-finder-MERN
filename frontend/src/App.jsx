@@ -25,11 +25,11 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   useInitializeTheme(); // ✅ Theme updates automatically on route change
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     try {
-      // dispatch(loadUser());
+      dispatch(loadUser());
     } catch (err) {
       Cookies.remove("token"); // remove invalid token
     }

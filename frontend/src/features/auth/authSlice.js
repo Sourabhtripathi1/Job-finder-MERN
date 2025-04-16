@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}auth`;
 
@@ -44,8 +46,15 @@ export const loadUser = createAsyncThunk(
   "auth/loadUser",
   async (_, thunkAPI) => {
     try {
-      const res = await axios.get(`${API_URL}/me`, { withCredentials: true });
-      return res.data;
+      const token = Cookies.get("token"); // e.g. 'authToken'
+
+      if (token) {
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        return decoded.user.user;
+      }
+      // const res = await axios.get(`${API_URL}/me`, { withCredentials: true });
+      // return res.data;
     } catch (error) {
       return thunkAPI.rejectWithValue("Failed to load user");
     }
