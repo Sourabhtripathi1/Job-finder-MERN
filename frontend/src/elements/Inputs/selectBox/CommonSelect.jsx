@@ -38,7 +38,8 @@ const CommonSelect = ({
         ref={selectRef}
         name="select"
         onChange={handleChange}
-        placeholder={placeholder}>
+        placeholder={placeholder}
+      >
         {options.map((item) => {
           return (
             <option key={item.value} value={item.value}>

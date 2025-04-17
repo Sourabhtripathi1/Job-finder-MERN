@@ -4,6 +4,10 @@ const companySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+  },
+  gstno: {
+    type: String,
+    required: true,
     unique: true,
   },
   description: {
@@ -14,6 +18,11 @@ const companySchema = new mongoose.Schema({
   },
   location: {
     type: String,
+  },
+  size: {
+    type: String,
+    enum: ["small", "medium", "large"],
+    default: "small",
   },
   logo: {
     type: String, // URL to company logo

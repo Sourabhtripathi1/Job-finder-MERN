@@ -16,6 +16,7 @@ import JobDetails from "./pages/Job-Seeker-pages/JobDetails";
 import Jobs from "./pages/Employer-Pages/Jobs";
 import Dashboard from "./pages/Employer-Pages/Dashboard";
 import Company from "./pages/Employer-Pages/company";
+import AddNewCompany from "./pages/Employer-Pages/AddNewCompany";
 import Applications from "./pages/Employer-Pages/applications";
 import URLNotFound from "./pages/Common-pages/URLNotFound";
 import useInitializeTheme from "./hooks/useInitializeTheme";
@@ -68,6 +69,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Company />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/add/new-company"
+            element={
+              <ProtectedRoute>
+                <AddNewCompany />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/add/new-company/:cId"
+            element={
+              <ProtectedRoute>
+                <AddNewCompany editCompany={true} editID={cid} />
               </ProtectedRoute>
             }
           />
