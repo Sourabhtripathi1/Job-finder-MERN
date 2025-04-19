@@ -22,6 +22,12 @@ const JobSchema = new mongoose.Schema({
     enum: ["full-time", "part-time", "internship", "contract"],
     required: true,
   },
+  status: {
+    type: Number,
+    enum: [0, 1],
+    required: true,
+    default: 0,
+  },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -31,7 +37,7 @@ const JobSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-  }, // Employer ID
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

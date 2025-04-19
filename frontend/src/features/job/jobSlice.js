@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = `"${import.meta.env.VITE_APP_BACKEND_URI}jobs`;
+const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}auth`;
 
 // 📌 Async Action: Fetch Jobs
 export const fetchJobs = createAsyncThunk(

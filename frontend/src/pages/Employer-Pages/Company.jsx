@@ -1,61 +1,105 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { toggleLoader } from "../../hooks/CommonFunctions";
 
+const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}company/`;
+
 const Company = () => {
+  const [companyData, setCompanyData] = useState([]);
+
   useEffect(() => {
-    toggleLoader();
+    loadCompanies();
   }, []);
 
-  const countryData = [];
+  const loadCompanies = async () => {
+    try {
+      toggleLoader();
+      const res = await axios.get(`${API_URL}list`, {
+        withCredentials: true,
+      });
+      setCompanyData(res.data.companies);
+    } catch (err) {
+      console.error("Error fetching companies:", err);
+    } finally {
+      toggleLoader();
+    }
+  };
 
   return (
-    <>
-      <Link to="/admin/add/new-company"><button className="btn btn-primary">Add New</button></Link>
-
-      <div className="container mt-50 mb-5">
-        <div className="progress-table-wrap mt-4">
-          <div className="progress-table">
-            <div className="table-head d-flex font-weight-bold border-bottom py-2">
-              <div className="serial col-1">S.no</div>
-              <div className="country col-4">Company</div>
-              <div className="visit col-3">Active Jobs</div>
-              <div className="percentage col-4">Actions</div>
-            </div>
-
-            {countryData.map((item) => (
-              <div
-                key={item.id}
-                className="table-row d-flex align-items-center py-2 border-bottom"
-              >
-                <div className="serial col-1">{item.id}</div>
-                <div className="country col-4 d-flex align-items-center">
-                  <img
-                    src={item.img}
-                    alt="flag"
-                    style={{ width: "25px", marginRight: "10px" }}
-                  />
-                  {item.name}
-                </div>
-                <div className="visit col-3">{item.visits}</div>
-                <div className="percentage col-4">
-                  <div className="progress">
-                    <div
-                      className={`progress-bar ${item.color}`}
-                      role="progressbar"
-                      style={{ width: `${item.percentage}%` }}
-                      aria-valuenow={item.percentage}
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div className="container mt-50 mb-50">
+      {/* Page Title & Button */}
+      <div className="d-flex justify-content-between align-items-center mb-5">
+        <h3 className="mb-0">Company Listings</h3>
+        <Link
+          to="/admin/add/new-company"
+          className="btn btn-success"
+          style={{ zIndex: 0 }}>
+          + Add New Company
+        </Link>
       </div>
-    </>
+
+      {/* Company Table */}
+      <div className="table-responsive">
+        <table className="table table-hover table-bordered text-center">
+          <thead className="thead-dark">
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Company</th>
+              <th scope="col">Active Jobs</th>
+              <th scope="col" style={{ width: "25%" }}>
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {companyData.length > 0 ? (
+              companyData.map((item, index) => (
+                <tr key={item._id}>
+                  <td>{index + 1}</td>
+                  <td className="text-left">
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ justifyContent: "space-around" }}>
+                      <img
+                        src={item.logo}
+                        alt="logo"
+                        className="rounded mr-2"
+                        style={{
+                          width: "35px",
+                          height: "35px",
+                          objectFit: "contain",
+                          border: "1px solid #ddd",
+                          padding: "2px",
+                        }}
+                      />
+                      <div style={{ paddingLeft: "2rem" }}>
+                        <strong>{item.name}</strong>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{item.activeJobs || 0}</td>
+                  <td>
+                    <div
+                      className="d-flex align-items-center justify-content-around"
+                      style={{ justifyContent: "space-around" }}>
+                      <button className="btn btn-success">Edit</button>
+                      <button className="btn btn-danger">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" className="text-muted py-4">
+                  No companies available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
