@@ -5,8 +5,6 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = ({ children }) => {
-  console.log(useSelector((state) => state.auth));
-
   const token = Cookies.get("token"); // e.g. 'authToken'
   var user = null;
   if (token) {

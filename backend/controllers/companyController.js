@@ -4,10 +4,9 @@ const uploadFile = require("../utils/uploadFile");
 
 const registerCompany = async (req, res) => {
   try {
-    const { companyName, gstno, description, website, location, size } =
-      req.body;
+    const { name, gstno, description, website, location, size } = req.body;
 
-    if (!companyName || !gstno) {
+    if (!name || !gstno) {
       return res.status(400).json({
         message: "Company name and GST number are required.",
         success: false,
@@ -31,7 +30,7 @@ const registerCompany = async (req, res) => {
     }
 
     const newCompany = await Company.create({
-      name: companyName,
+      name,
       gstno,
       description,
       website,
@@ -109,18 +108,26 @@ const getCompanyById = async (req, res) => {
 
 const updateCompany = async (req, res) => {
   try {
-    const { name, description, website, location } = req.body;
+    const { name, description, website, location, size, address, gstno } =
+      req.body;
 
-    const file = req.file;
-    // idhar cloudinary ayega
-    const fileUri = getDataUri(file);
-    var logo = null;
-    if (fileUri) {
-      const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-      logo = cloudResponse.secure_url;
+    let logo = null;
+    if (req.file && req.file.path) {
+      const uploadResult = await uploadFile(req.file.path);
+      logo = uploadResult.url;
     }
 
-    const updateData = { name, description, website, location, logo };
+    const updateData = {
+      name,
+      description,
+      website,
+      location,
+      size,
+      address,
+      gstno,
+    };
+
+    if (logo) updateData.logo = logo;
 
     const company = await Company.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
@@ -132,12 +139,48 @@ const updateCompany = async (req, res) => {
         success: false,
       });
     }
+
     return res.status(200).json({
       message: "Company information updated.",
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.log("Update Company Error:", error.message);
+    return res.status(500).json({
+      message: "Internal server error.",
+      success: false,
+    });
+  }
+};
+
+const deleteCompany = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const company = await Company.findById(id);
+    if (!company) {
+      return res.status(404).json({
+        message: "Company not found.",
+        success: false,
+      });
+    }
+
+    // Optional: Delete related jobs
+    await Job.deleteMany({ companyId: id });
+
+    // Delete company
+    await Company.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "Company deleted successfully.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Delete Company Error:", error.message);
+    return res.status(500).json({
+      message: "Failed to delete company.",
+      success: false,
+    });
   }
 };
 
@@ -146,4 +189,5 @@ module.exports = {
   getCompany,
   getCompanyById,
   updateCompany,
+  deleteCompany,
 };

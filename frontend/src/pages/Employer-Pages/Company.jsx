@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { toggleLoader } from "../../hooks/CommonFunctions";
+import { toast } from "react-toastify";
 
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}company/`;
 
@@ -11,6 +13,39 @@ const Company = () => {
   useEffect(() => {
     loadCompanies();
   }, []);
+
+  const deleteCompany = async (id) => {
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        toggleLoader();
+        const res = await axios.delete(`${API_URL}delete/${id}`, {
+          withCredentials: true,
+        });
+
+        if (res.data.success) {
+          toast.success("Company deleted successfully.");
+          loadCompanies();
+        } else {
+          toast.error("Failed to delete company.");
+        }
+      } catch (error) {
+        console.error("Error deleting company:", error);
+        toast.error("An error occurred while deleting the company.");
+      } finally {
+        toggleLoader();
+      }
+    }
+  };
 
   const loadCompanies = async () => {
     try {
@@ -83,15 +118,23 @@ const Company = () => {
                     <div
                       className="d-flex align-items-center justify-content-around"
                       style={{ justifyContent: "space-around" }}>
-                      <button className="btn btn-success">Edit</button>
-                      <button className="btn btn-danger">Delete</button>
+                      <Link
+                        to={`/admin/edit-company/${item._id}`}
+                        className="btn btn-success">
+                        Edit
+                      </Link>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => deleteCompany(item._id)}>
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="text-muted py-4">
+                <td colSpan="4" className="text-muted py-4">
                   No companies available.
                 </td>
               </tr>

@@ -34,8 +34,30 @@ const AddNewCompany = ({ editCompany = false }) => {
   }, []);
 
   const loadCompanyData = async (id) => {
-    console.log("Load company data for ID:", id);
-    // Add API call to fetch and set existing data
+    try {
+      const res = await axios.get(`${API_URL}get/${id}`, {
+        withCredentials: true,
+      });
+
+      if (res.data.success && res.data.company) {
+        const company = res.data.company;
+        setcName(company.name || "");
+        setcDescription(company.description || "");
+        setgstno(company.gstno || "");
+        setWebsite(company.website || "");
+        setLocation(company.location || "");
+        setcSize(company.size || "small");
+        setcAddress(company.address || "");
+        setLogo(null); // don't preload file input
+      } else {
+        toast.error("Failed to load company data");
+      }
+    } catch (error) {
+      console.error("Error loading company data:", error);
+      toast.error("Something went wrong while loading company details");
+    } finally {
+      toggleLoader(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -44,15 +66,25 @@ const AddNewCompany = ({ editCompany = false }) => {
       toggleLoader(true);
 
       const formData = new FormData();
-      formData.append("companyName", cName);
+      formData.append("name", cName);
       formData.append("description", cDescription);
       formData.append("gstno", gstno);
       formData.append("website", website);
       formData.append("location", location);
       formData.append("size", cSize);
-      formData.append("logo", logo);
+      formData.append("address", cAddress);
+      if (logo) formData.append("logo", logo);
 
-      const response = await axios.post(`${API_URL}register`, formData, {
+      const url = editCompany
+        ? `${API_URL}update/${cId}`
+        : `${API_URL}register`;
+
+      const method = editCompany ? "put" : "post";
+
+      const response = await axios({
+        method,
+        url,
+        data: formData,
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -60,7 +92,11 @@ const AddNewCompany = ({ editCompany = false }) => {
       });
 
       if (response.data.success) {
-        toast.success("Company registered successfully.");
+        toast.success(
+          editCompany
+            ? "Company updated successfully."
+            : "Company added successfully."
+        );
       }
     } catch (error) {
       console.error("Error:", error);
@@ -76,7 +112,7 @@ const AddNewCompany = ({ editCompany = false }) => {
         className="card shadow p-3"
         style={{
           width: "100%",
-          maxWidth: "600px",
+          maxWidth: "800px",
           margin: "4rem",
           padding: "3rem",
         }}>
@@ -153,8 +189,9 @@ const AddNewCompany = ({ editCompany = false }) => {
               value={cAddress}
               onChange={(e) => setcAddress(e.target.value)}
               placeholder="Enter address"
-              rows={4}
-            />
+              rows={4}>
+              {cAddress}
+            </textarea>
           </div>
 
           <div className="mb-3">
@@ -162,7 +199,7 @@ const AddNewCompany = ({ editCompany = false }) => {
               Location
             </label>
             <br />
-            <CitySelect onSelectChange={setLocation} selected={location} />
+            <CitySelect selected={location} onSelectChange={setLocation} />
           </div>
           <br />
           <br />

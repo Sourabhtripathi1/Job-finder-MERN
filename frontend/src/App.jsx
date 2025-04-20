@@ -81,7 +81,7 @@ function App() {
             }
           />
           <Route
-            path="/admin/add/new-company/:cId"
+            path="/admin/edit-company/:cId"
             element={
               <ProtectedRoute>
                 <AddNewCompany editCompany={true} />

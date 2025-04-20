@@ -44,18 +44,18 @@ const JobListing = () => {
   ];
 
   const filterJobs = () => {
-    console.log({
-      Category,
-      city,
-      sortBy,
-      jobTypes,
-      experience,
-      salary,
-    });
+    // console.log({
+    //   Category,
+    //   city,
+    //   sortBy,
+    //   jobTypes,
+    //   experience,
+    //   salary,
+    // });
   };
 
   useEffect(() => {
-    console.log(searchParams);
+    // console.log(searchParams);
     filterJobs();
   }, [searchParams]);
 

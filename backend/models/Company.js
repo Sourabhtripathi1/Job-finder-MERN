@@ -12,6 +12,7 @@ const companySchema = new mongoose.Schema(
       unique: true,
     },
     description: String,
+    address: String,
     website: String,
     location: {
       type: mongoose.Schema.Types.ObjectId,

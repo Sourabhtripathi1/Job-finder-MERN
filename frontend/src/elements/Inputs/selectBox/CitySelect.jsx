@@ -4,9 +4,10 @@ import "nice-select2/dist/css/nice-select2.css";
 import NiceSelect from "nice-select2";
 import { toggleLoader } from "../../../hooks/CommonFunctions";
 
-const CitySelect = ({ onSelectChange = () => { } }) => {
+const CitySelect = ({ defaultValue = "", onSelectChange = () => {} }) => {
   const selectRef = useRef(null);
   const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(defaultValue);
 
   useEffect(() => {
     toggleLoader(true);
@@ -34,12 +35,25 @@ const CitySelect = ({ onSelectChange = () => { } }) => {
     }
   }, [cities]);
 
+  useEffect(() => {
+    setSelectedCity(defaultValue);
+  }, [defaultValue]);
+
   const handleChange = (event) => {
-    onSelectChange(event.target.value);
+    const value = event.target.value;
+    setSelectedCity(value);
+    onSelectChange(value);
   };
 
   return (
-    <select ref={selectRef} onChange={handleChange} placeholder="Select city">
+    <select
+      ref={selectRef}
+      onChange={handleChange}
+      value={selectedCity}
+      placeholder="Select city">
+      <option value="" disabled>
+        Select city
+      </option>
       {cities.map((city) => (
         <option key={city._id} value={city._id}>
           {city.name}
