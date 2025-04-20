@@ -4759,6 +4759,59 @@ form.search-box .search-form a {
 	border-radius: 1.5rem;
 }
 
-/* .nice-select {
-	width: 100%;
-} */
+/* Wrapper control styles */
+.react-select__control {
+	border: 1px solid #ced4da !important;
+	/* Bootstrap default border */
+	box-shadow: none !important;
+	color: #000 !important;
+	min-height: 38px;
+	font-size: 1rem;
+}
+
+/* Focused state */
+.react-select__control--is-focused {
+	border-color: #86b7fe !important;
+	/* Bootstrap's focus blue */
+	box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+}
+
+/* Hover */
+.react-select__control:hover {
+	border-color: #86b7fe !important;
+}
+
+/* Dropdown indicator */
+.react-select__dropdown-indicator {
+	color: #495057 !important;
+}
+
+/* Single selected value */
+.react-select__single-value {
+	color: #000 !important;
+	/* Black text */
+}
+
+/* Options in the dropdown */
+.react-select__option {
+	background-color: white !important;
+	color: #000 !important;
+}
+
+/* Selected option */
+.react-select__option--is-selected {
+	background-color: #fb246a !important;
+	color: #fff !important;
+}
+
+/* Focused (hovered) option */
+.react-select__option--is-focused {
+	background-color: #ffe2ec !important;
+	color: #000 !important;
+}
+
+/* Dropdown menu container */
+.react-select__menu {
+	z-index: 9999 !important;
+	/* High z-index */
+}

@@ -1,54 +1,50 @@
-import React, { useEffect, useRef } from "react";
-import "nice-select2/dist/css/nice-select2.css";
-import NiceSelect from "nice-select2";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
 
 const CommonSelect = ({
   onSelectChange = null,
   options = [],
   searchable = false,
   placeholder = "Select",
+  selected = null,
 }) => {
-  const selectRef = useRef(null);
+  const [selectOptions, setSelectOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
-    loadSelect();
-  }, []);
+    // Convert options format: { value, title } → { value, label }
+    const formattedOptions = options.map((item) => ({
+      value: item.value,
+      label: item.title,
+    }));
+    setSelectOptions(formattedOptions);
 
-  const loadSelect = () => {
-    if (selectRef.current) {
-      // Remove existing instance if it exists
-      const prevNiceSelect = selectRef.current.nextElementSibling;
-      if (prevNiceSelect && prevNiceSelect.classList.contains("nice-select")) {
-        prevNiceSelect.remove();
+    // Handle default selection if passed
+    if (selected) {
+      const matchedOption = formattedOptions.find(
+        (item) => item.value === selected
+      );
+      if (matchedOption) {
+        setSelectedOption(matchedOption);
       }
-
-      // Initialize NiceSelect only once
-      new NiceSelect(selectRef.current, { searchable: searchable });
-      selectRef.current.style.display = "none";
     }
-  };
+  }, [options, selected]);
 
-  const handleChange = (event) => {
-    onSelectChange(event.target.value);
+  const handleChange = (selected) => {
+    setSelectedOption(selected);
+    if (onSelectChange) onSelectChange(selected?.value || "");
   };
 
   return (
-    <>
-      <select
-        ref={selectRef}
-        name="select"
-        onChange={handleChange}
-        placeholder={placeholder}
-      >
-        {options.map((item) => {
-          return (
-            <option key={item.value} value={item.value}>
-              {item.title}
-            </option>
-          );
-        })}
-      </select>
-    </>
+    <Select
+      options={selectOptions}
+      value={selectedOption}
+      onChange={handleChange}
+      isSearchable={searchable}
+      placeholder={placeholder}
+      isClearable
+      classNamePrefix="react-select"
+    />
   );
 };
 

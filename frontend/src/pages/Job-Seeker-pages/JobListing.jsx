@@ -12,7 +12,7 @@ const JobListing = () => {
 
   const [Category, setCategory] = useState(null);
   const [city, setcity] = useState(null);
-  const [sortBy, setsortBy] = useState(null);
+  const [sortBy, setsortBy] = useState("title");
   const [salary, setsalary] = useState({ max: 0, min: 10 });
   const [jobTypes, setJobTypes] = useState({
     fullTime: false,
@@ -278,6 +278,7 @@ const JobListing = () => {
                           <CommonSelect
                             options={sortByOptions}
                             onSelectChange={setsortBy}
+                            selected={sortBy}
                           />
                         </div>
                         {/*  Select job items End*/}

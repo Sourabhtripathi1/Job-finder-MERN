@@ -1,55 +1,50 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
 import axios from "axios";
-import "nice-select2/dist/css/nice-select2.css";
-import NiceSelect from "nice-select2";
 
-const JobCategorySelect = ({ onSelectChange = () => {} }) => {
-  const selectRef = useRef(null);
-  const [category, setcategory] = useState([]);
+const JobCategorySelect = ({
+  onSelectChange = () => {},
+  defaultValue = "",
+}) => {
+  const [categories, setCategories] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_APP_BACKEND_URI}utility/category-list`)
       .then((res) => {
-        setcategory(res.data);
+        const formatted = res.data.map((item) => ({
+          value: item._id,
+          label: item.name,
+        }));
+        setCategories(formatted);
+
+        // Set default selected if provided
+        if (defaultValue) {
+          const match = formatted.find((opt) => opt.value === defaultValue);
+          if (match) setSelectedOption(match);
+        }
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Category fetch error:", err);
       });
-  }, []);
+  }, [defaultValue]);
 
-  useEffect(() => {
-    if (category.length > 0 && selectRef.current) {
-      // Remove existing instance if it exists
-      const prevNiceSelect = selectRef.current.nextElementSibling;
-      if (prevNiceSelect && prevNiceSelect.classList.contains("nice-select")) {
-        prevNiceSelect.remove();
-      }
-
-      // Initialize NiceSelect only once
-      new NiceSelect(selectRef.current, { searchable: true });
-      selectRef.current.style.display = "none";
-    }
-  }, [category]);
-
-  const handleChange = (event) => {
-    onSelectChange(event.target.value);
+  const handleChange = (selected) => {
+    setSelectedOption(selected);
+    onSelectChange(selected?.value || "");
   };
 
   return (
-    <>
-      <select
-        ref={selectRef}
-        name="select"
-        onChange={handleChange}
-        placholder="Select Job Category">
-        {category.map((item) => (
-          <option key={item._id} value={item._id}>
-            {item.name}
-          </option>
-        ))}
-      </select>
-    </>
+    <Select
+      options={categories}
+      value={selectedOption}
+      onChange={handleChange}
+      placeholder="Select Job Category"
+      isSearchable
+      isClearable
+      classNamePrefix="react-select"
+    />
   );
 };
 

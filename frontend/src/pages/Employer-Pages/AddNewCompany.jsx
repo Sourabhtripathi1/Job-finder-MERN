@@ -198,25 +198,19 @@ const AddNewCompany = ({ editCompany = false }) => {
             <label htmlFor="location" className="form-label">
               Location
             </label>
-            <br />
             <CitySelect selected={location} onSelectChange={setLocation} />
           </div>
-          <br />
-          <br />
 
           <div className="mb-3">
             <label htmlFor="cSize" className="form-label">
               Company Size
             </label>
-            <br />
             <CommonSelect
               options={cSizeOptions}
               onSelectChange={setcSize}
               selected={cSize}
             />
           </div>
-          <br />
-          <br />
 
           <div className="mb-3">
             <label htmlFor="logo" className="form-label">

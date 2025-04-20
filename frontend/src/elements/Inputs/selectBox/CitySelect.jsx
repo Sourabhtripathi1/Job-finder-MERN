@@ -1,65 +1,60 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
 import axios from "axios";
-import "nice-select2/dist/css/nice-select2.css";
-import NiceSelect from "nice-select2";
 import { toggleLoader } from "../../../hooks/CommonFunctions";
 
-const CitySelect = ({ defaultValue = "", onSelectChange = () => {} }) => {
-  const selectRef = useRef(null);
+const CitySelect = ({
+  selected = "",
+  onSelectChange = () => {},
+  customStyles = {},
+}) => {
   const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(defaultValue);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     toggleLoader(true);
+
     axios
       .get(`${import.meta.env.VITE_APP_BACKEND_URI}utility/city-list`)
       .then((res) => {
-        setCities(res.data);
-        toggleLoader();
+        const options = res.data.map((city) => ({
+          value: city._id,
+          label: city.name,
+        }));
+
+        setCities(options);
+
+        if (selected) {
+          const defaultCity = options.find((city) => city.value === selected);
+          if (defaultCity) {
+            setSelectedOption(defaultCity);
+          }
+        }
+
+        toggleLoader(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Error fetching city list:", err);
+        toggleLoader(false);
       });
-  }, []);
+  }, [selected]);
 
-  useEffect(() => {
-    if (cities.length > 0 && selectRef.current) {
-      // Destroy previous NiceSelect instance
-      const prev = selectRef.current.nextElementSibling;
-      if (prev && prev.classList.contains("nice-select")) {
-        prev.remove();
-      }
-
-      new NiceSelect(selectRef.current, { searchable: true });
-      selectRef.current.style.display = "none";
-    }
-  }, [cities]);
-
-  useEffect(() => {
-    setSelectedCity(defaultValue);
-  }, [defaultValue]);
-
-  const handleChange = (event) => {
-    const value = event.target.value;
-    setSelectedCity(value);
-    onSelectChange(value);
+  const handleChange = (selected) => {
+    setSelectedOption(selected);
+    onSelectChange(selected ? selected.value : "");
   };
 
   return (
-    <select
-      ref={selectRef}
+    <Select
+      value={selectedOption}
       onChange={handleChange}
-      value={selectedCity}
-      placeholder="Select city">
-      <option value="" disabled>
-        Select city
-      </option>
-      {cities.map((city) => (
-        <option key={city._id} value={city._id}>
-          {city.name}
-        </option>
-      ))}
-    </select>
+      options={cities}
+      placeholder="Select city"
+      isClearable
+      isSearchable
+      styles={customStyles}
+      classNamePrefix="react-select"
+    />
   );
 };
 
