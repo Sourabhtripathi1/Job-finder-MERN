@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}company/`;
 
-const AddNewCompany = ({ editCompany = false }) => {
+const AddUpdateCompany = ({ editCompany = false }) => {
   const { cId } = useParams();
 
   const [cName, setcName] = useState("");
@@ -234,4 +234,4 @@ const AddNewCompany = ({ editCompany = false }) => {
   );
 };
 
-export default AddNewCompany;
+export default AddUpdateCompany;
