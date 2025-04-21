@@ -1,122 +1,196 @@
 const Job = require("../models/Job");
 
-// admin post krega job
+// Admin creates a new job
 export const postJob = async (req, res) => {
   try {
     const {
       title,
       description,
       requirements,
-      salary,
+      salaryMin,
+      salaryMax,
       location,
       jobType,
       experience,
       companyId,
     } = req.body;
+
     const userId = req.id;
 
     if (
       !title ||
       !description ||
       !requirements ||
-      !salary ||
+      !salaryMin ||
+      !salaryMax ||
       !location ||
       !jobType ||
       !experience ||
       !companyId
     ) {
       return res.status(400).json({
-        message: "Somethin is missing.",
+        message: "All fields are required.",
         success: false,
       });
     }
+
     const job = await Job.create({
       title,
       description,
-      requirements: requirements.split(","),
-      salary: Number(salary),
+      requirements: requirements.split(",").map((item) => item.trim()),
+      salary: {
+        min: Number(salaryMin),
+        max: Number(salaryMax),
+      },
       location,
       jobType,
-      experienceLevel: experience,
-      position,
+      experience,
       company: companyId,
-      created_by: userId,
+      postedBy: userId,
     });
+
     return res.status(201).json({
       message: "New job created successfully.",
       job,
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error posting job:", error);
+    return res.status(500).json({ message: "Server error.", success: false });
   }
 };
-// student k liye
+
+// ✅ Admin updates an existing job
+export const updateJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const adminId = req.id;
+
+    const {
+      title,
+      description,
+      requirements,
+      salaryMin,
+      salaryMax,
+      location,
+      jobType,
+      experience,
+      companyId,
+    } = req.body;
+
+    if (
+      !title ||
+      !description ||
+      !requirements ||
+      !salaryMin ||
+      !salaryMax ||
+      !location ||
+      !jobType ||
+      !experience ||
+      !companyId
+    ) {
+      return res.status(400).json({
+        message: "All fields are required.",
+        success: false,
+      });
+    }
+
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found.", success: false });
+    }
+
+    if (job.postedBy.toString() !== adminId) {
+      return res.status(403).json({ message: "Unauthorized action.", success: false });
+    }
+
+    job.title = title;
+    job.description = description;
+    job.requirements = requirements.split(",").map((item) => item.trim());
+    job.salary = {
+      min: Number(salaryMin),
+      max: Number(salaryMax),
+    };
+    job.location = location;
+    job.jobType = jobType;
+    job.experience = experience;
+    job.company = companyId;
+
+    await job.save();
+
+    return res.status(200).json({
+      message: "Job updated successfully.",
+      job,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error updating job:", error);
+    return res.status(500).json({ message: "Server error.", success: false });
+  }
+};
+
+// Get all jobs (student)
 export const getAllJobs = async (req, res) => {
   try {
     const keyword = req.query.keyword || "";
+
     const query = {
       $or: [
         { title: { $regex: keyword, $options: "i" } },
         { description: { $regex: keyword, $options: "i" } },
       ],
     };
+
     const jobs = await Job.find(query)
-      .populate({
-        path: "company",
-      })
+      .populate("company")
       .sort({ createdAt: -1 });
-    if (!jobs) {
-      return res.status(404).json({
-        message: "Jobs not found.",
-        success: false,
-      });
-    }
+
     return res.status(200).json({
       jobs,
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching jobs:", error);
+    return res.status(500).json({ message: "Server error.", success: false });
   }
 };
-// student
+
+// Get job by ID
 export const getJobById = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const job = await Job.findById(jobId).populate({
-      path: "applications",
-    });
+
+    const job = await Job.findById(jobId).populate("company");
+
     if (!job) {
       return res.status(404).json({
-        message: "Jobs not found.",
+        message: "Job not found.",
         success: false,
       });
     }
+
     return res.status(200).json({ job, success: true });
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching job by ID:", error);
+    return res.status(500).json({ message: "Server error.", success: false });
   }
 };
-// admin kitne job create kra hai abhi tk
+
+// Admin's jobs
 export const getAdminJobs = async (req, res) => {
   try {
     const adminId = req.id;
-    const jobs = await Job.find({ created_by: adminId }).populate({
-      path: "company",
-      createdAt: -1,
-    });
-    if (!jobs) {
-      return res.status(404).json({
-        message: "Jobs not found.",
-        success: false,
-      });
-    }
+
+    const jobs = await Job.find({ postedBy: adminId })
+      .populate("company")
+      .sort({ createdAt: -1 });
+
     return res.status(200).json({
       jobs,
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching admin jobs:", error);
+    return res.status(500).json({ message: "Server error.", success: false });
   }
 };

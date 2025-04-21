@@ -14,6 +14,7 @@ import About from "./pages/Common-pages/About";
 import ContactUs from "./pages/Common-pages/ContactUs";
 import JobDetails from "./pages/Job-Seeker-pages/JobDetails";
 import Jobs from "./pages/Employer-Pages/Jobs";
+import AddUpdateJobs from "./pages/Employer-Pages/AddUpdateJobs";
 import Dashboard from "./pages/Employer-Pages/Dashboard";
 import Company from "./pages/Employer-Pages/Company";
 import AddUpdateCompany from "./pages/Employer-Pages/AddUpdateCompany";
@@ -61,6 +62,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Jobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/add/new-job"
+            element={
+              <ProtectedRoute>
+                <AddUpdateJobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/edit-job/:jId"
+            element={
+              <ProtectedRoute>
+                <AddUpdateJobs editJob={true} />
               </ProtectedRoute>
             }
           />
