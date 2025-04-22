@@ -1,9 +1,9 @@
-const auth = require("../middlewares/auth");
-const express = require("express");
+import auth from "../middlewares/auth.js";
+import express from "express";
 const router = express.Router();
 
 router.get("/list", auth, async (req, res) => {
   return;
 });
 
-module.exports = router;
+export default router;

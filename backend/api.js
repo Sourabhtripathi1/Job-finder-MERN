@@ -1,20 +1,31 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+
+// Import route modules using ES module syntax
+import authRoutes from "./routes/auth.js";
+import utilityRoutes from "./routes/utilities.js";
+import jobRoutes from "./routes/job.js";
+import applicationRoutes from "./routes/application.js";
+import companyRoutes from "./routes/company.js";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/utility", require("./routes/utilities"));
-app.use("/api/job", require("./routes/job"));
-app.use("/api/application", require("./routes/application"));
-app.use("/api/company", require("./routes/company"));
+// Use routes
+app.use("/api/auth", authRoutes);
+app.use("/api/utility", utilityRoutes);
+app.use("/api/job", jobRoutes);
+app.use("/api/application", applicationRoutes);
+app.use("/api/company", companyRoutes);
 
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB Connected"))

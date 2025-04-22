@@ -1,4 +1,4 @@
-const Job = require("../models/Job");
+import { Job } from "../models/Job.js";
 
 // Admin creates a new job
 export const postJob = async (req, res) => {
@@ -97,11 +97,15 @@ export const updateJob = async (req, res) => {
 
     const job = await Job.findById(jobId);
     if (!job) {
-      return res.status(404).json({ message: "Job not found.", success: false });
+      return res
+        .status(404)
+        .json({ message: "Job not found.", success: false });
     }
 
     if (job.postedBy.toString() !== adminId) {
-      return res.status(403).json({ message: "Unauthorized action.", success: false });
+      return res
+        .status(403)
+        .json({ message: "Unauthorized action.", success: false });
     }
 
     job.title = title;

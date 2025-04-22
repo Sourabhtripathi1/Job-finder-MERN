@@ -1,6 +1,6 @@
-const cloudinary = require("./cloudinary");
-const { v4: uuidv4 } = require("uuid");
-const fs = require("fs");
+import cloudinary from "./cloudinary.js";
+import { v4 as uuidv4 } from "uuid";
+import fs from "fs";
 
 const uploadFile = async (localFilePath) => {
   try {
@@ -23,4 +23,4 @@ const uploadFile = async (localFilePath) => {
     throw new Error("File upload failed.");
   }
 };
-module.exports = uploadFile;
+export default uploadFile;

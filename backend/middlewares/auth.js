@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET;
 
-module.exports = function (req, res, next) {
+export default function (req, res, next) {
   const token = req?.cookies?.token;
 
   if (!token) {
@@ -18,4 +18,4 @@ module.exports = function (req, res, next) {
     });
     res.status(401).json({ msg: "Invalid token", error });
   }
-};
+}

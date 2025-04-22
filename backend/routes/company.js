@@ -1,14 +1,14 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const multer = require("multer");
-const auth = require("../middlewares/auth");
-const {
+import multer from "multer";
+import auth from "../middlewares/auth.js";
+import {
   registerCompany,
   getCompany,
   getCompanyById,
   updateCompany,
   deleteCompany,
-} = require("../controllers/companyController");
+} from "../controllers/companyController.js";
 
 // File handling setup
 const upload = multer({ dest: "temp/" });
@@ -20,4 +20,4 @@ router.get("/list", auth, getCompany);
 router.put("/update/:id", auth, upload.single("logo"), updateCompany);
 router.delete("/delete/:id", auth, deleteCompany);
 
-module.exports = router;
+export default router;

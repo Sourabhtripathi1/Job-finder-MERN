@@ -1,5 +1,5 @@
-const Application = require("../models/Application");
-const Job = require("../models/Job");
+import { Application } from "../models/Application.js";
+import { Job } from "../models/Job.js";
 
 export const applyJob = async (req, res) => {
   try {

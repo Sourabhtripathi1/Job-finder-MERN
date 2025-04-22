@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const City = require("../models/City");
-const Category = require("../models/Category");
+import { City } from "../models/City.js";
+import { Category } from "../models/Category.js";
 
 router.get("/city-list", async (req, res) => {
   try {
@@ -23,4 +23,4 @@ router.get("/category-list", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

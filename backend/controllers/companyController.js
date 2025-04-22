@@ -1,8 +1,8 @@
-const Company = require("../models/Company");
-const Job = require("../models/Job");
-const uploadFile = require("../utils/uploadFile");
+import { Company } from "../models/Company.js";
+import { Job } from "../models/Job.js";
+import uploadFile from "../utils/uploadFile.js";
 
-const registerCompany = async (req, res) => {
+export const registerCompany = async (req, res) => {
   try {
     const { name, gstno, description, website, location, size } = req.body;
 
@@ -54,7 +54,7 @@ const registerCompany = async (req, res) => {
   }
 };
 
-const getCompany = async (req, res) => {
+export const getCompany = async (req, res) => {
   try {
     const companies = await Company.find().populate("CreatedBy", "name email");
 
@@ -87,7 +87,7 @@ const getCompany = async (req, res) => {
 };
 
 // get company by id
-const getCompanyById = async (req, res) => {
+export const getCompanyById = async (req, res) => {
   try {
     const companyId = req.params.id;
     const company = await Company.findById(companyId);
@@ -106,7 +106,7 @@ const getCompanyById = async (req, res) => {
   }
 };
 
-const updateCompany = async (req, res) => {
+export const updateCompany = async (req, res) => {
   try {
     const { name, description, website, location, size, address, gstno } =
       req.body;
@@ -153,7 +153,7 @@ const updateCompany = async (req, res) => {
   }
 };
 
-const deleteCompany = async (req, res) => {
+export const deleteCompany = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -182,12 +182,4 @@ const deleteCompany = async (req, res) => {
       success: false,
     });
   }
-};
-
-module.exports = {
-  registerCompany,
-  getCompany,
-  getCompanyById,
-  updateCompany,
-  deleteCompany,
 };
