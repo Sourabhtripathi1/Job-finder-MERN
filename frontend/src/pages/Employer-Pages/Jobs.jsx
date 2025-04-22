@@ -17,7 +17,7 @@ const Jobs = () => {
   const loadJobs = async () => {
     try {
       toggleLoader();
-      const res = await axios.get(`${API_URL}list`, {
+      const res = await axios.get(`${API_URL}admin-jobs`, {
         withCredentials: true,
       });
       setJobsData(res.data.jobs);
@@ -48,7 +48,7 @@ const Jobs = () => {
 
         if (res.data.success) {
           toast.success("Job deleted successfully.");
-          loadJobs();  // Reload the job list after deletion
+          loadJobs(); // Reload the job list after deletion
         } else {
           toast.error("Failed to delete Job.");
         }
@@ -69,8 +69,7 @@ const Jobs = () => {
         <Link
           to="/admin/add/new-job"
           className="btn btn-success"
-          style={{ zIndex: 0 }}
-        >
+          style={{ zIndex: 0 }}>
           + Add New Job
         </Link>
       </div>
@@ -83,7 +82,7 @@ const Jobs = () => {
               <th scope="col">S.No</th>
               <th scope="col">Job Title</th>
               <th scope="col">Company</th>
-              <th scope="col">Active Jobs</th>
+              <th scope="col">Location</th>
               <th scope="col" style={{ width: "20%" }}>
                 Actions
               </th>
@@ -94,30 +93,36 @@ const Jobs = () => {
               jobsData.map((item, index) => (
                 <tr key={item._id}>
                   <td>{index + 1}</td>
-                  <td className="text-left">
-                    <div
-                      className="d-flex align-items-center"
-                      style={{ justifyContent: "space-between" }}
-                    >
 
-                      <div style={{ paddingLeft: "1rem" }}>
-                        <strong>{item.name}</strong>
-                      </div>
+                  {/* Job Title */}
+                  <td className="text-left">
+                    <strong>{item.title}</strong>
+                    <div className="text-muted" style={{ fontSize: "0.85rem" }}>
+                      {item.description}
                     </div>
                   </td>
-                  <td>{item.activeJobs || 0}</td>
+
+                  {/* Company Name */}
+                  <td>{item.company?.name || "-"}</td>
+
+                  {/* Location */}
+                  <td>
+                    {item.company?.location
+                      ? `${item.company.location.name}, ${item.company.location.state}`
+                      : "N/A"}
+                  </td>
+
+                  {/* Actions */}
                   <td>
                     <div className="d-flex justify-content-center gap-2">
                       <Link
                         to={`/admin/edit-job/${item._id}`}
-                        className="btn btn-warning btn-sm"
-                      >
+                        className="btn btn-warning btn-sm">
                         Edit
                       </Link>
                       <button
                         className="btn btn-danger btn-sm"
-                        onClick={() => deleteJobs(item._id)}
-                      >
+                        onClick={() => deleteJobs(item._id)}>
                         Delete
                       </button>
                     </div>
@@ -126,7 +131,7 @@ const Jobs = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="text-muted py-4">
+                <td colSpan="8" className="text-muted py-4">
                   No jobs available.
                 </td>
               </tr>

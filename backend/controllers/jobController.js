@@ -7,22 +7,21 @@ export const postJob = async (req, res) => {
       title,
       description,
       requirements,
-      salaryMin,
-      salaryMax,
+      salary,
       location,
       jobType,
       experience,
       companyId,
     } = req.body;
 
-    const userId = req.id;
+    const userId = req.user._id;
 
     if (
       !title ||
       !description ||
       !requirements ||
-      !salaryMin ||
-      !salaryMax ||
+      !salary?.min ||
+      !salary?.max ||
       !location ||
       !jobType ||
       !experience ||
@@ -37,10 +36,10 @@ export const postJob = async (req, res) => {
     const job = await Job.create({
       title,
       description,
-      requirements: requirements.split(",").map((item) => item.trim()),
+      requirements: requirements.map((item) => item.trim()),
       salary: {
-        min: Number(salaryMin),
-        max: Number(salaryMax),
+        min: Number(salary.min),
+        max: Number(salary.max),
       },
       location,
       jobType,
@@ -60,7 +59,7 @@ export const postJob = async (req, res) => {
   }
 };
 
-// ✅ Admin updates an existing job
+// Admin updates an existing job
 export const updateJob = async (req, res) => {
   try {
     const jobId = req.params.id;
@@ -70,8 +69,7 @@ export const updateJob = async (req, res) => {
       title,
       description,
       requirements,
-      salaryMin,
-      salaryMax,
+      salary,
       location,
       jobType,
       experience,
@@ -82,8 +80,8 @@ export const updateJob = async (req, res) => {
       !title ||
       !description ||
       !requirements ||
-      !salaryMin ||
-      !salaryMax ||
+      !salary?.min ||
+      !salary?.max ||
       !location ||
       !jobType ||
       !experience ||
@@ -110,10 +108,10 @@ export const updateJob = async (req, res) => {
 
     job.title = title;
     job.description = description;
-    job.requirements = requirements.split(",").map((item) => item.trim());
+    job.requirements = requirements.map((item) => item.trim());
     job.salary = {
-      min: Number(salaryMin),
-      max: Number(salaryMax),
+      min: Number(salary.min),
+      max: Number(salary.max),
     };
     job.location = location;
     job.jobType = jobType;
@@ -183,10 +181,17 @@ export const getJobById = async (req, res) => {
 // Admin's jobs
 export const getAdminJobs = async (req, res) => {
   try {
-    const adminId = req.id;
+    const adminId = req.user._id;
 
     const jobs = await Job.find({ postedBy: adminId })
-      .populate("company")
+      .populate({
+        path: "company",
+        select: "name location", // Get company name and location reference
+        populate: {
+          path: "location", // Populate the location field from the City model
+          select: "name state", // Select the city name and state
+        },
+      })
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -196,5 +201,27 @@ export const getAdminJobs = async (req, res) => {
   } catch (error) {
     console.error("Error fetching admin jobs:", error);
     return res.status(500).json({ message: "Server error.", success: false });
+  }
+};
+
+// Delete API
+export const deleteJob = async (req, res) => {
+  const jobId = req.params.id;
+
+  try {
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ success: false, message: "Job not found" });
+    }
+
+    await Job.findByIdAndDelete(jobId);
+
+    return res.json({ success: true, message: "Job deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting job:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the job",
+    });
   }
 };
