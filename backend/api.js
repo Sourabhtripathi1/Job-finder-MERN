@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config(); 
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -10,8 +11,6 @@ import utilityRoutes from "./routes/utilities.js";
 import jobRoutes from "./routes/job.js";
 import applicationRoutes from "./routes/application.js";
 import companyRoutes from "./routes/company.js";
-
-dotenv.config();
 
 const app = express();
 app.use(express.json());

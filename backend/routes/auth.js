@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -89,6 +91,8 @@ router.post(
         })
         .json({ msg: "Login successful" });
     } catch (error) {
+      console.log("JWT_SECRET:", JWT_SECRET); // Check if the secret is undefined or correct
+      console.log(error);
       res.status(500).json({ msg: "Server Error", error });
     }
   }
