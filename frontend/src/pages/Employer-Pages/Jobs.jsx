@@ -108,13 +108,15 @@ const Jobs = () => {
                   {/* Location */}
                   <td>
                     {item.company?.location
-                      ? `${item.company.location.name}, ${item.company.location.state}`
+                      ? `${item.location.name}, ${item.location.state}`
                       : "N/A"}
                   </td>
 
                   {/* Actions */}
                   <td>
-                    <div className="d-flex justify-content-center gap-2">
+                    <div
+                      className="d-flex justify-content-around"
+                      style={{ justifyContent: "space-around", width: "110%" }}>
                       <Link
                         to={`/admin/edit-job/${item._id}`}
                         className="btn btn-warning btn-sm">

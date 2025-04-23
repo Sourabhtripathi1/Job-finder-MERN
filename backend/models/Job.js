@@ -10,7 +10,11 @@ const JobSchema = new mongoose.Schema(
       ref: "Company",
       required: true,
     },
-    location: { type: String, required: true },
+    location: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "City",
+      required: true,
+    },
     salary: {
       min: { type: Number, required: true },
       max: { type: Number, required: true },

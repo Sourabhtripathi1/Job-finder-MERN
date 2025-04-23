@@ -131,20 +131,61 @@ export const updateJob = async (req, res) => {
   }
 };
 
-// Get all jobs (student)
 export const getAllJobs = async (req, res) => {
   try {
-    const keyword = req.query.keyword || "";
+    const {
+      keyword = "",
+      city,
+      category,
+      minSalary,
+      maxSalary,
+      minExp,
+      maxExp,
+      jobTypes,
+    } = req.query;
 
     const query = {
-      $or: [
-        { title: { $regex: keyword, $options: "i" } },
-        { description: { $regex: keyword, $options: "i" } },
+      $and: [
+        {
+          $or: [
+            { title: { $regex: keyword, $options: "i" } },
+            { description: { $regex: keyword, $options: "i" } },
+          ],
+        },
       ],
     };
 
+    // Filter by city
+    if (city) {
+      query.$and.push({ location: city });
+    }
+
+    // Filter by salary range
+    if (minSalary || maxSalary) {
+      query.$and.push({
+        "salary.min": { $gte: Number(minSalary || 0) },
+        "salary.max": { $lte: Number(maxSalary || Infinity) },
+      });
+    }
+
+    // Filter by experience (in years)
+    if (minExp || maxExp) {
+      query.$and.push({
+        experience: {
+          $gte: `${minExp || 0} years`,
+          $lte: `${maxExp || 50} years`,
+        },
+      });
+    }
+
+    // Filter by job types
+    if (jobTypes && jobTypes.length > 0) {
+      query.$and.push({ jobType: { $in: jobTypes } });
+    }
+
     const jobs = await Job.find(query)
       .populate("company")
+      .populate("location")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -186,11 +227,17 @@ export const getAdminJobs = async (req, res) => {
     const jobs = await Job.find({ postedBy: adminId })
       .populate({
         path: "company",
-        select: "name location", // Get company name and location reference
+        select: "name location",
         populate: {
-          path: "location", // Populate the location field from the City model
-          select: "name state", // Select the city name and state
+          path: "location",
+          model: "City",
+          select: "name state",
         },
+      })
+      .populate({
+        path: "location", // Populate the Job's location as well
+        model: "City",
+        select: "name state",
       })
       .sort({ createdAt: -1 });
 

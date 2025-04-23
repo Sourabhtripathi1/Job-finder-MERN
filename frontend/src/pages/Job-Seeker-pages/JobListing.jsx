@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import CitySelect from "../../elements/Inputs/selectBox/CitySelect";
 import JobCategorySelect from "../../elements/Inputs/selectBox/JobCategorySelect";
 import CommonSelect from "../../elements/Inputs/selectBox/CommonSelect";
@@ -7,8 +6,14 @@ import PriceRangeSlider from "../../elements/Inputs/price-range-slider/PriceRang
 import JobListElement from "../../elements/Functionals/JobListElement.jsx/JobListElement";
 import { useSearchParams } from "react-router-dom";
 
+const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI || ""}job/`;
+
 const JobListing = () => {
-  const navigate = useNavigate();
+  // const [JobList, setJobList] = useState([]);
+
+  // useEffect(() => {
+
+  // }, [])
 
   const [Category, setCategory] = useState(null);
   const [city, setcity] = useState(null);
@@ -43,15 +48,28 @@ const JobListing = () => {
     },
   ];
 
-  const filterJobs = () => {
-    // console.log({
-    //   Category,
-    //   city,
-    //   sortBy,
-    //   jobTypes,
-    //   experience,
-    //   salary,
-    // });
+  const filterJobs = async () => {
+    const params = new URLSearchParams();
+
+    if (city) params.append("city", city);
+    if (Category) params.append("category", Category);
+    if (salary.min) params.append("minSalary", salary.min);
+    if (salary.max) params.append("maxSalary", salary.max);
+    if (experience.min) params.append("minExp", experience.min);
+    if (experience.max) params.append("maxExp", experience.max);
+
+    const selectedJobTypes = Object.entries(jobTypes)
+      .filter(([_, v]) => v)
+      .map(([k]) => k.replace(/([A-Z])/g, "-$1").toLowerCase());
+
+    if (selectedJobTypes.length > 0)
+      params.append("jobTypes", JSON.stringify(selectedJobTypes));
+
+    const res = await fetch(`/api/jobs?${params.toString()}`);
+    const data = await res.json();
+
+    console.log("Filtered jobs:", data.jobs);
+    // Update state to render job listings here
   };
 
   useEffect(() => {
