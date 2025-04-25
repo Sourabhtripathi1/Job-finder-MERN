@@ -1,18 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}auth`;
+const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}job/`;
 
-// 📌 Async Action: Fetch Jobs
 export const fetchJobs = createAsyncThunk(
   "job/fetchJobs",
-  async (_, thunkAPI) => {
-    try {
-      const response = await axios.get(API_URL);
-      return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
-    }
+  async (filters = {}) => {
+    const query = new URLSearchParams(filters).toString();
+    const response = await fetch(`${API_URL}list?${query}`);
+    if (!response.ok) throw new Error("Failed to fetch jobs");
+    return await response.json();
   }
 );
 
