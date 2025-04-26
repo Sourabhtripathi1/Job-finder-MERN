@@ -1,63 +1,63 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const JobListElement = ({ job }) => {
-  if (!job) {
-    return null; // Handle cases where job data might not be available
-  }
+  if (!job) return null;
 
-  // Destructure job properties with fallbacks for missing data
   const {
-    title = "Job Title",
-    company = { name: "Company Name", logo: "assets/img/icon/job-list1.png" },
-    location = "Location not specified",
-    salary = { min: 0, max: 0, currency: "$" },
+    _id = "",
+    title = "Untitled Job",
+    company = {},
+    location = {},
+    salary = {},
     jobType = "Full Time",
-    createdAt,
+    createdAt = new Date().toISOString(),
   } = job;
 
-  // Format salary string (e.g., $3500 - $4000)
-  const salaryText =
-    salary.min && salary.max
-      ? `${salary.currency}${salary.min} - ${salary.currency}${salary.max}`
-      : "Salary not disclosed";
-
-  // Format date (e.g., "7 hours ago" or custom logic)
-  const timePosted = createdAt
-    ? new Date(createdAt).toLocaleDateString()
-    : "Just now";
+  const logoUrl =
+    company.logo ||
+    `${import.meta.env.VITE_APP_PUBLIC_URL}assets/img/avatar.webp`;
+  const companyName = company.name || "Unknown Company";
+  const salaryCurrency = salary.currency || "₹";
+  const salaryMin = salary.min ?? 0;
+  const salaryMax = salary.max ?? 0;
+  const locationName = location.name || "Unknown City";
+  const locationState = location.state || "Unknown State";
+  const formattedDate = new Date(createdAt).toLocaleDateString();
 
   return (
     <div className="single-job-items mb-30">
       <div className="job-items">
-        {/* Company Logo */}
         <div className="company-img">
-          <a href="#">
+          <Link to={`/job-details/${_id}`}>
             <img
-              src={company.logo || "assets/img/icon/job-list1.png"}
-              alt={`${company.name} Logo`}
+              src={logoUrl}
+              alt="company logo"
+              style={{ height: "4rem", width: "4rem" }}
             />
-          </a>
+          </Link>
         </div>
-
-        {/* Job Details */}
         <div className="job-tittle job-tittle2">
-          <a href="#">
+          <Link to={`/job-details/${_id}`}>
             <h4>{title}</h4>
-          </a>
+          </Link>
           <ul>
-            <li>{company.name}</li>
+            <li>{companyName}</li>
             <li>
-              <i className="fas fa-map-marker-alt" /> {location}
+              <i className="fas fa-map-marker-alt" /> {locationName},{" "}
+              {locationState}
             </li>
-            <li>{salaryText}</li>
+            <li>
+              {salaryCurrency}
+              {salaryMin} - {salaryCurrency}
+              {salaryMax}
+            </li>
           </ul>
         </div>
       </div>
-
-      {/* Job Type & Time Posted */}
       <div className="items-link items-link2 f-right">
-        <a href={`/job/${job._id}`}>{jobType}</a>
-        <span>{timePosted}</span>
+        <Link to={`/job-details/${_id}`}>{jobType}</Link>
+        <span>{formattedDate}</span>
       </div>
     </div>
   );

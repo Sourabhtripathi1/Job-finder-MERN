@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchJobs } from "../../features/job/jobSlice";
+import axios from "axios";
 
 import CitySelect from "../../elements/Inputs/selectBox/CitySelect";
 import JobCategorySelect from "../../elements/Inputs/selectBox/JobCategorySelect";
 import CommonSelect from "../../elements/Inputs/selectBox/CommonSelect";
 import PriceRangeSlider from "../../elements/Inputs/price-range-slider/PriceRangeSlider";
 import JobListElement from "../../elements/Functionals/JobListElement.jsx/JobListElement";
+import { toggleLoader } from "../../hooks/CommonFunctions";
+
+const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI || ""}job/`;
 
 const JobListing = () => {
-  const dispatch = useDispatch();
-  const { jobs, isLoading, error } = useSelector((state) => state.job);
+  const [jobs, setJobs] = useState([]);
+  const [error, setError] = useState(null);
 
   const [Category, setCategory] = useState(null);
-  const [city, setcity] = useState(null);
-  const [sortBy, setsortBy] = useState("title");
-  const [salary, setsalary] = useState({ max: 0, min: 10 });
+  const [city, setCity] = useState(null);
+  const [sortBy, setSortBy] = useState("title");
+  const [salary, setSalary] = useState({ max: 100, min: 10 });
   const [jobTypes, setJobTypes] = useState({
     fullTime: false,
     partTime: false,
@@ -26,21 +28,44 @@ const JobListing = () => {
 
   // Fetch jobs whenever filters change
   useEffect(() => {
-    const filters = {
-      category: Category || "",
-      city: city || "",
-      sortBy,
-      minSalary: salary.min,
-      maxSalary: salary.max,
-      minExperience: experience.min,
-      maxExperience: experience.max,
-      jobTypes: Object.entries(jobTypes)
-        .filter(([_, v]) => v)
-        .map(([k]) => k.replace(/([A-Z])/g, "-$1").toLowerCase())
-        .join(","),
+    const fetchJobs = async () => {
+      toggleLoader(true);
+      setError(null);
+
+      try {
+        const filters = {
+          category: Category || "",
+          city: city || "",
+          sortBy,
+          minSalary: salary.min,
+          maxSalary: salary.max,
+          minExperience: experience.min,
+          maxExperience: experience.max,
+          jobTypes: Object.entries(jobTypes)
+            .filter(([_, v]) => v)
+            .map(([k]) => k.replace(/([A-Z])/g, "-$1").toLowerCase())
+            .join(","),
+        };
+
+        const response = await axios.get(`${API_URL}/list`, {
+          params: filters,
+        });
+
+        if (response.data.success) {
+          setJobs(response.data.jobs);
+        } else {
+          setError("Failed to fetch jobs.");
+        }
+      } catch (err) {
+        setError("Error fetching jobs.");
+        console.error(err);
+      } finally {
+        toggleLoader(false);
+      }
     };
-    dispatch(fetchJobs(filters));
-  }, [Category, city, sortBy, salary, experience, jobTypes, dispatch]);
+
+    fetchJobs();
+  }, [Category, city, sortBy, salary, experience, jobTypes]);
 
   const handleJobTypeChange = (e) => {
     const { name, checked } = e.target;
@@ -58,10 +83,12 @@ const JobListing = () => {
   return (
     <>
       {/* Hero Area Start */}
-      <div className="slider-area ">
+      <div className="slider-area">
         <div
           className="single-slider section-overly slider-height2 d-flex align-items-center"
-          data-background="assets/img/hero/about.jpg">
+          data-background={`${
+            import.meta.env.VITE_APP_PUBLIC_URL
+          }assets/img/hero/about.jpg`}>
           <div className="container">
             <div className="row">
               <div className="col-xl-12">
@@ -116,7 +143,7 @@ const JobListing = () => {
                     <h4>Job Location</h4>
                   </div>
                   <div className="select-job-items2">
-                    <CitySelect onSelectChange={setcity} />
+                    <CitySelect onSelectChange={setCity} />
                   </div>
 
                   <div className="select-Categories pt-80 pb-50">
@@ -155,7 +182,7 @@ const JobListing = () => {
                       <h4>Filter Salary (in Lakhs)</h4>
                     </div>
                     <div className="widgets_inner">
-                      <PriceRangeSlider onSliderChange={setsalary} />
+                      <PriceRangeSlider onSliderChange={setSalary} />
                     </div>
                   </aside>
                 </div>
@@ -174,7 +201,7 @@ const JobListing = () => {
                           <span>Sort by</span>
                           <CommonSelect
                             options={sortByOptions}
-                            onSelectChange={setsortBy}
+                            onSelectChange={setSortBy}
                             selected={sortBy}
                           />
                         </div>
@@ -182,12 +209,10 @@ const JobListing = () => {
                     </div>
                   </div>
 
-                  {isLoading && <p>Loading jobs...</p>}
                   {error && <p className="text-danger">Error: {error}</p>}
-                  {!isLoading &&
-                    jobs.map((job, index) => (
-                      <JobListElement key={index} job={job} />
-                    ))}
+                  {jobs.map((job, index) => (
+                    <JobListElement key={index} job={job} />
+                  ))}
                 </div>
               </section>
             </div>

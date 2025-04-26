@@ -13,6 +13,8 @@ import JobListing from "./pages/Job-Seeker-pages/JobListing";
 import About from "./pages/Common-pages/About";
 import ContactUs from "./pages/Common-pages/ContactUs";
 import JobDetails from "./pages/Job-Seeker-pages/JobDetails";
+import MyApplication from "./pages/Job-Seeker-pages/MyApplication";
+import ProfilePage from "./pages/Common-pages/ProfilePage";
 import Jobs from "./pages/Employer-Pages/Jobs";
 import AddUpdateJobs from "./pages/Employer-Pages/AddUpdateJobs";
 import Dashboard from "./pages/Employer-Pages/Dashboard";
@@ -45,10 +47,26 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/job-listing" element={<JobListing />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/job-details" element={<JobDetails />} />
+          <Route path="/job-listing" element={<JobListing />} />
+          <Route path="/job-details/:jId" element={<JobDetails />} />
+          <Route
+            path="/my-applications"
+            element={
+              <ProtectedRoute>
+                <MyApplication />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/admin/dashboard"
             element={
@@ -117,6 +135,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+
       <ToastContainer
         position="top-center"
         autoClose={1500}

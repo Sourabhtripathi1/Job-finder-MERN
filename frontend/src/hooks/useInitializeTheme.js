@@ -7,6 +7,8 @@ import { toggleLoader } from "./CommonFunctions.js";
 export const useInitializeTheme = () => {
   const location = useLocation(); // Get current route
 
+  window.scrollTo(0, 0);
+  
   useEffect(() => {
     toggleLoader(true);
     // Set data background

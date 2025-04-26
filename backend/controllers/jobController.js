@@ -9,6 +9,7 @@ export const postJob = async (req, res) => {
       requirements,
       salary,
       location,
+      category,
       jobType,
       experience,
       companyId,
@@ -23,6 +24,7 @@ export const postJob = async (req, res) => {
       !salary?.min ||
       !salary?.max ||
       !location ||
+      !category ||
       !jobType ||
       !experience ||
       !companyId
@@ -44,6 +46,7 @@ export const postJob = async (req, res) => {
       location,
       jobType,
       experience,
+      category,
       company: companyId,
       postedBy: userId,
     });
@@ -63,7 +66,7 @@ export const postJob = async (req, res) => {
 export const updateJob = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const adminId = req.id;
+    const adminId = req.user._id;
 
     const {
       title,
@@ -71,6 +74,7 @@ export const updateJob = async (req, res) => {
       requirements,
       salary,
       location,
+      category,
       jobType,
       experience,
       companyId,
@@ -83,6 +87,7 @@ export const updateJob = async (req, res) => {
       !salary?.min ||
       !salary?.max ||
       !location ||
+      !category ||
       !jobType ||
       !experience ||
       !companyId
@@ -114,6 +119,7 @@ export const updateJob = async (req, res) => {
       max: Number(salary.max),
     };
     job.location = location;
+    job.category = category;
     job.jobType = jobType;
     job.experience = experience;
     job.company = companyId;
@@ -159,6 +165,9 @@ export const getAllJobs = async (req, res) => {
     if (city) {
       query.$and.push({ location: city });
     }
+    if (category) {
+      query.$and.push({ category: category });
+    }
 
     // Filter by salary range
     if (minSalary || maxSalary) {
@@ -186,6 +195,7 @@ export const getAllJobs = async (req, res) => {
     const jobs = await Job.find(query)
       .populate("company")
       .populate("location")
+      .populate("category")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -201,21 +211,19 @@ export const getAllJobs = async (req, res) => {
 // Get job by ID
 export const getJobById = async (req, res) => {
   try {
-    const jobId = req.params.id;
-
-    const job = await Job.findById(jobId).populate("company");
+    const job = await Job.findById(req.params.id)
+      .populate("company")
+      .populate("category")
+      .populate("location");
 
     if (!job) {
-      return res.status(404).json({
-        message: "Job not found.",
-        success: false,
-      });
+      return res.status(404).json({ message: "Job not found", success: false });
     }
 
-    return res.status(200).json({ job, success: true });
+    res.status(200).json({ job, success: true });
   } catch (error) {
-    console.error("Error fetching job by ID:", error);
-    return res.status(500).json({ message: "Server error.", success: false });
+    console.error("Error fetching job:", error);
+    res.status(500).json({ message: "Server error", success: false });
   }
 };
 
@@ -235,9 +243,13 @@ export const getAdminJobs = async (req, res) => {
         },
       })
       .populate({
-        path: "location", // Populate the Job's location as well
+        path: "location",
         model: "City",
         select: "name state",
+      })
+      .populate({
+        path: "category",
+        model: "Category",
       })
       .sort({ createdAt: -1 });
 

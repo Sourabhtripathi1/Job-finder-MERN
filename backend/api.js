@@ -11,6 +11,7 @@ import utilityRoutes from "./routes/utilities.js";
 import jobRoutes from "./routes/job.js";
 import applicationRoutes from "./routes/application.js";
 import companyRoutes from "./routes/company.js";
+import userRoutes from "./routes/user.js";
 
 const app = express();
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use("/api/utility", utilityRoutes);
 app.use("/api/job", jobRoutes);
 app.use("/api/application", applicationRoutes);
 app.use("/api/company", companyRoutes);
+app.use("/api/user", userRoutes);
 
 // Connect to MongoDB
 mongoose

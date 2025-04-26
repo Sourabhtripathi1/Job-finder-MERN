@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CommonSelect from "../../elements/Inputs/selectBox/CommonSelect";
 import CitySelect from "../../elements/Inputs/selectBox/CitySelect";
+import JobCategorySelect from "../../elements/Inputs/selectBox/JobCategorySelect";
 import { toggleLoader } from "../../hooks/CommonFunctions";
 
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI || ""}job/`;
@@ -24,6 +25,7 @@ const AddUpdateJobs = ({ editJob = false }) => {
   const [description, setDescription] = useState("");
   const [requirements, setRequirements] = useState("");
   const [location, setLocation] = useState("");
+  const [category, setcategory] = useState("");
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
   const [experience, setExperience] = useState("");
@@ -63,6 +65,7 @@ const AddUpdateJobs = ({ editJob = false }) => {
         setExperience(job.experience || "");
         setJobType(job.jobType || "full-time");
         setCompany(job.company?._id || "");
+        setcategory(job.category?._id || "");
       } else {
         toast.error("Job not found");
       }
@@ -83,7 +86,15 @@ const AddUpdateJobs = ({ editJob = false }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !description || !requirements || !location || !experience || !company) {
+    if (
+      !title ||
+      !description ||
+      !requirements ||
+      !location ||
+      !category ||
+      !experience ||
+      !company
+    ) {
       return toast.warn("Please fill in all required fields.");
     }
 
@@ -93,12 +104,16 @@ const AddUpdateJobs = ({ editJob = false }) => {
       const data = {
         title,
         description,
-        requirements: requirements.split(",").map((req) => req.trim()).filter(Boolean),
+        requirements: requirements
+          .split(",")
+          .map((req) => req.trim())
+          .filter(Boolean),
         salary: {
           min: Number(salaryMin),
           max: Number(salaryMax),
         },
         location,
+        category,
         jobType,
         experience,
         companyId: company,
@@ -115,7 +130,9 @@ const AddUpdateJobs = ({ editJob = false }) => {
       });
 
       if (res.data.success) {
-        toast.success(editJob ? "Job updated successfully." : "Job posted successfully.");
+        toast.success(
+          editJob ? "Job updated successfully." : "Job posted successfully."
+        );
         navigate("/admin/jobs"); // Redirect to job list or dashboard
       } else {
         toast.error("Failed to save job");
@@ -131,8 +148,12 @@ const AddUpdateJobs = ({ editJob = false }) => {
     <div className="container d-flex align-items-center justify-content-center vh-100 bg-light form-container">
       <div
         className="card shadow p-3"
-        style={{ width: "100%", maxWidth: "800px", margin: "4rem", padding: "3rem" }}
-      >
+        style={{
+          width: "100%",
+          maxWidth: "800px",
+          margin: "4rem",
+          padding: "3rem",
+        }}>
         <h3 className="text-center mb-5">{editJob ? "Edit Job" : "Add Job"}</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -208,6 +229,14 @@ const AddUpdateJobs = ({ editJob = false }) => {
               onChange={(e) => setExperience(e.target.value)}
               placeholder="E.g. 1-2 years"
               required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Job Category</label>
+            <JobCategorySelect
+              selected={category}
+              onSelectChange={setcategory}
             />
           </div>
 

@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 
-const JobCategorySelect = ({
-  onSelectChange = () => {},
-  defaultValue = "",
-}) => {
+const JobCategorySelect = ({ onSelectChange = () => {}, selected = "" }) => {
   const [categories, setCategories] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -20,15 +17,15 @@ const JobCategorySelect = ({
         setCategories(formatted);
 
         // Set default selected if provided
-        if (defaultValue) {
-          const match = formatted.find((opt) => opt.value === defaultValue);
+        if (selected) {
+          const match = formatted.find((opt) => opt.value === selected);
           if (match) setSelectedOption(match);
         }
       })
       .catch((err) => {
         console.error("Category fetch error:", err);
       });
-  }, [defaultValue]);
+  }, [selected]);
 
   const handleChange = (selected) => {
     setSelectedOption(selected);

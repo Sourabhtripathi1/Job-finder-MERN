@@ -50,7 +50,6 @@ export const loadUser = createAsyncThunk(
 
       if (token) {
         const decoded = jwtDecode(token);
-        // console.log(decoded);
         return decoded.user.user;
       }
       // const res = await axios.get(`${API_URL}/me`, { withCredentials: true });

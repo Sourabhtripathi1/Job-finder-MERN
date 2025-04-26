@@ -85,7 +85,7 @@ const Header = () => {
                             <li>
                               <Link to="/contact-us">About</Link>
                             </li>
-                            <li>
+                            {/* <li>
                               <Link to="/">Page</Link>
                               <ul className="submenu">
                                 <li>
@@ -101,7 +101,7 @@ const Header = () => {
                                   <Link to="/job-details">Job Details</Link>
                                 </li>
                               </ul>
-                            </li>
+                            </li> */}
                             <li>
                               <Link to="/contact-us">Contact</Link>
                             </li>
@@ -119,6 +119,20 @@ const Header = () => {
                               {user?.name?.charAt(0).toUpperCase() || "U"}
                             </div>
                             <ul className="submenu">
+                              <li>
+                                <Link to={"/my-profile"}>Profile</Link>
+                              </li>
+                              {user.role === "employer" ? (
+                                <></>
+                              ) : (
+                                <>
+                                  <li>
+                                    <Link to={"/my-applications"}>
+                                      My Applications
+                                    </Link>
+                                  </li>
+                                </>
+                              )}
                               <li>
                                 <Link onClick={handleLogout}>Logout</Link>
                               </li>

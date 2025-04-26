@@ -12,7 +12,9 @@ const Home = () => {
         <div className="slider-active">
           <div
             className="single-slider slider-height d-flex align-items-center"
-            data-background={`/assets/img/hero/h1_hero.jpg`}>
+            data-background={`${
+              import.meta.env.VITE_APP_PUBLIC_URL
+            }assets/img/hero/h1_hero.jpg`}>
             <div className="container">
               <div className="row">
                 <div className="col-xl-6 col-lg-9 col-md-10">
@@ -170,7 +172,9 @@ const Home = () => {
       {/* Online CV Area Start  */}
       <div
         className="online-cv cv-bg section-overly pt-90 pb-120"
-        data-background={`/assets/img/gallery/cv_bg.jpg`}>
+        data-background={`${
+          import.meta.env.VITE_APP_PUBLIC_URL
+        }assets/img/gallery/cv_bg.jpg`}>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-xl-10">
@@ -317,7 +321,9 @@ const Home = () => {
       {/* How  Apply Process Start */}
       <div
         className="apply-process-area apply-bg pt-150 pb-150"
-        data-background={`/assets/img/gallery/how-applybg.png`}>
+        data-background={`${
+          import.meta.env.VITE_APP_PUBLIC_URL
+        }assets/img/gallery/how-applybg.png`}>
         <div className="container">
           {/* Section Tittle  */}
           <div className="row">

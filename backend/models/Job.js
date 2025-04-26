@@ -19,10 +19,15 @@ const JobSchema = new mongoose.Schema(
       min: { type: Number, required: true },
       max: { type: Number, required: true },
     },
-    experience: { type: String, required: true },
+    experience: { type: Number, required: true },
     jobType: {
       type: String,
       enum: ["full-time", "part-time", "internship", "contract"],
+      required: true,
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       required: true,
     },
     status: {

@@ -5,9 +5,9 @@ import "ion-rangeslider/js/ion.rangeSlider.min.js";
 
 const PriceRangeSlider = ({
   min = 0,
-  max = 50,
+  max = 100,
   from = 0,
-  to = 10,
+  to = 15,
   onSliderChange = () => {},
 }) => {
   const sliderRef = useRef(null);
