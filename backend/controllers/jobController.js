@@ -227,6 +227,29 @@ export const getJobById = async (req, res) => {
   }
 };
 
+export const getCompanyJobs = async (req, res) => {
+  try {
+    const companyId = req.params.cId;
+
+    const jobs = await Job.find({ company: companyId })
+      .populate("company")
+      .populate("category")
+      .populate("location");
+
+    if (!jobs || jobs.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No jobs found for this company", success: false });
+    }
+
+    res.status(200).json({ jobs, success: true });
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+
 // Admin's jobs
 export const getAdminJobs = async (req, res) => {
   try {

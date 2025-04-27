@@ -10,10 +10,9 @@ const CitySelect = ({
 }) => {
   const [cities, setCities] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
+  toggleLoader();
 
   useEffect(() => {
-    toggleLoader(true);
-
     axios
       .get(`${import.meta.env.VITE_APP_BACKEND_URI}utility/city-list`)
       .then((res) => {
@@ -30,12 +29,9 @@ const CitySelect = ({
             setSelectedOption(defaultCity);
           }
         }
-
-        toggleLoader(false);
       })
       .catch((err) => {
         console.error("Error fetching city list:", err);
-        toggleLoader(false);
       });
   }, [selected]);
 

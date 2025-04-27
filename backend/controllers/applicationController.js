@@ -13,6 +13,15 @@ export const applyJob = async (req, res) => {
       });
     }
 
+    console.log(req.user.profile.resume);
+
+    if (!req.user.profile.resume || req.user.profile.resume == "") {
+      return res.status(400).json({
+        message: "Please upload your resume.",
+        success: false,
+      });
+    }
+
     // check if the user has already applied for the job
     const existingApplication = await Application.findOne({
       jobId,
@@ -56,13 +65,20 @@ export const applyJob = async (req, res) => {
 
 export const getAppliedJobs = async (req, res) => {
   try {
-    const userId = req.id;
+    const userId = req.user._id; // Assuming this comes from your auth middleware
+
     const applications = await Application.find({ userId })
       .sort({ appliedAt: -1 })
       .populate({
         path: "jobId",
+        select: "title company", // Only populate necessary fields
         populate: {
-          path: "company location category",
+          path: "company",
+          select: "name location", // Only populate company name and location
+          populate: {
+            path: "location",
+            select: "name state", // From City collection
+          },
         },
       });
 
@@ -73,12 +89,35 @@ export const getAppliedJobs = async (req, res) => {
       });
     }
 
+    // Format the response cleanly for frontend
+    const formattedApplications = applications.map((app) => ({
+      _id: app._id,
+      status: app.status,
+      appliedAt: app.appliedAt,
+      job: app.jobId
+        ? {
+            title: app.jobId.title || "-",
+            company: app.jobId.company
+              ? {
+                  name: app.jobId.company.name || "-",
+                  location: app.jobId.company.location
+                    ? {
+                        name: app.jobId.company.location.name || "-",
+                        state: app.jobId.company.location.state || "-",
+                      }
+                    : null,
+                }
+              : null,
+          }
+        : null,
+    }));
+
     return res.status(200).json({
-      applications,
+      applications: formattedApplications,
       success: true,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching applied jobs:", error);
     return res.status(500).json({
       message: "Something went wrong.",
       success: false,
@@ -86,39 +125,32 @@ export const getAppliedJobs = async (req, res) => {
   }
 };
 
-// Admin: View all applicants for a job
-export const getApplicants = async (req, res) => {
+export const getApplicationsByJob = async (req, res) => {
   try {
-    const jobId = req.params.id;
+    const { jobId } = req.params;
+    const { status } = req.query; // Get status filter from query parameters
 
-    const applications = await Application.find({ jobId })
-      .sort({ appliedAt: -1 })
-      .populate("userId");
+    // Build the filter object
+    let filter = { jobId };
 
-    if (!applications.length) {
-      return res.status(404).json({
-        message: "No applicants found for this job.",
-        success: false,
-      });
+    if (status && status !== "all") {
+      filter.status = status;
     }
 
-    return res.status(200).json({
-      applications,
-      success: true,
-    });
+    const applications = await Application.find(filter)
+      .populate("userId", "-password")
+      .sort({ appliedAt: -1 });
+
+    res.json({ applications });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Something went wrong.",
-      success: false,
-    });
+    res.status(500).json({ message: "Error fetching applications", error });
   }
 };
 
 export const updateStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const applicationId = req.params.id;
+    const applicationId = req.params.aId;
 
     if (!status) {
       return res.status(400).json({
@@ -135,7 +167,7 @@ export const updateStatus = async (req, res) => {
       });
     }
 
-    application.status = status.toLowerCase();
+    application.status = status;
     await application.save();
 
     return res.status(200).json({

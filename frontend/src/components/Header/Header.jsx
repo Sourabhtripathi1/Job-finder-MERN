@@ -70,9 +70,6 @@ const Header = () => {
                             <li>
                               <Link to="/admin/company">Company</Link>
                             </li>
-                            <li>
-                              <Link to="/admin/applications">Applicants</Link>
-                            </li>
                           </ul>
                         ) : (
                           <ul id="navigation">
@@ -123,7 +120,13 @@ const Header = () => {
                                 <Link to={"/my-profile"}>Profile</Link>
                               </li>
                               {user.role === "employer" ? (
-                                <></>
+                                <>
+                                  <li>
+                                    <Link to={"/admin/view-applications"}>
+                                      View Applicants
+                                    </Link>
+                                  </li>
+                                </>
                               ) : (
                                 <>
                                   <li>

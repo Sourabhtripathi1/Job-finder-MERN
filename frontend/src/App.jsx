@@ -124,7 +124,7 @@ function App() {
             }
           />
           <Route
-            path="/admin/applications"
+            path="/admin/view-applications"
             element={
               <ProtectedRoute>
                 <Applications />

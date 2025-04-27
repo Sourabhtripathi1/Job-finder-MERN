@@ -9,7 +9,7 @@ const uploadFile = async (localFilePath) => {
     const response = await cloudinary.uploader.upload(localFilePath, {
       public_id: randomName,
       folder: "jobFinder",
-      resource_type: "auto",
+      resource_type: "raw",
     });
 
     fs.unlinkSync(localFilePath); // Delete temp file

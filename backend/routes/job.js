@@ -6,6 +6,7 @@ import {
   getJobById,
   getAdminJobs,
   deleteJob,
+  getCompanyJobs,
 } from "../controllers/jobController.js";
 import auth from "../middlewares/auth.js";
 
@@ -15,6 +16,7 @@ router.post("/create", auth, postJob);
 router.put("/update/:id", auth, updateJob);
 router.get("/list", getAllJobs);
 router.get("/get/:id", getJobById);
+router.get("/get/company/:cId", auth, getCompanyJobs);
 router.get("/admin-jobs", auth, getAdminJobs);
 router.delete("/delete/:id", auth, deleteJob);
 

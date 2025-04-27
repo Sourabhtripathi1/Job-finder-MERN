@@ -183,3 +183,13 @@ export const deleteCompany = async (req, res) => {
     });
   }
 };
+
+export const getUserCompanies = async (req, res) => {
+  try {
+    const userId = req.user._id; // assuming you have middleware for user authentication
+    const companies = await Company.find({ CreatedBy: userId });
+    res.json({ companies });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching companies", error });
+  }
+};

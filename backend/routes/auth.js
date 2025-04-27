@@ -116,9 +116,20 @@ router.get("/me", async (req, res) => {
 
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    // const user = await User.findById(decoded.user.user._id).select("-password");
-    // res.json(user);
-    res.json(decoded?.user?.user);
+    const user = await User.findById(decoded.user.user._id).select("-password");
+
+    const payload = { user: { user } };
+    const newToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+
+    res
+      .status(200)
+      .cookie("token", newToken, {
+        // httpOnly: true,
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .json({ msg: "Login successful", user });
+
   } catch (error) {
     console.log(error);
 

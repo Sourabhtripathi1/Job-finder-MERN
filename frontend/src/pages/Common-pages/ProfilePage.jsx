@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toggleLoader } from "../../hooks/CommonFunctions";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"; // <-- import useDispatch
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { loadUpdatedUser } from "../../features/auth/authSlice";
+import CitySelect from "../../elements/Inputs/selectBox/CitySelect"; // Import CitySelect
 
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}`;
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,7 +23,8 @@ const ProfilePage = () => {
     skills: [],
     resume: null,
   });
-  const navigate = useNavigate();
+  const [existingResume, setExistingResume] = useState(null);
+  const [selectedResumeName, setSelectedResumeName] = useState("");
 
   useEffect(() => {
     toggleLoader();
@@ -32,6 +38,13 @@ const ProfilePage = () => {
         skills: user?.profile?.skills || [],
         resume: null,
       });
+
+      if (user?.profile?.resume) {
+        setExistingResume(user.profile.resume);
+        const parts = user.profile.resume.split("/");
+        const lastPart = parts[parts.length - 1];
+        setSelectedResumeName(lastPart);
+      }
     }
   }, [user]);
 
@@ -45,11 +58,20 @@ const ProfilePage = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, resume: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, resume: file });
+      setSelectedResumeName(file.name);
+    }
+  };
+
+  const handleCitySelectChange = (selectedCity) => {
+    setFormData({ ...formData, location: selectedCity });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toggleLoader("true");
 
     try {
       const payload = new FormData();
@@ -73,8 +95,11 @@ const ProfilePage = () => {
       );
 
       toast.success("Profile updated successfully!");
-      navigate("/my-applications");
+      toggleLoader();
+      dispatch(loadUpdatedUser());
+      navigate("/");
     } catch (error) {
+      toggleLoader();
       toast.error(error.response?.data?.message || "Failed to update profile.");
     }
   };
@@ -86,7 +111,7 @@ const ProfilePage = () => {
         style={{
           width: "100%",
           maxWidth: "1000px",
-          margin: "4rem",
+          margin: "4rem auto",
           padding: "3rem",
         }}>
         <h2 className="text-center mb-4 font-weight-bold">Update Profile</h2>
@@ -128,13 +153,9 @@ const ProfilePage = () => {
 
           <div className="form-group mt-3">
             <label>Location</label>
-            <input
-              type="text"
-              name="location"
-              placeholder="Enter your location"
-              value={formData.location}
-              onChange={handleChange}
-              className="form-control"
+            <CitySelect
+              selected={formData.location}
+              onSelectChange={handleCitySelectChange}
             />
           </div>
 
@@ -165,18 +186,40 @@ const ProfilePage = () => {
                 />
               </div>
 
-              <div className="form-group mt-40">
+              <div className="form-group mt-3">
                 <label>Upload Resume</label>
                 <input
                   type="file"
                   onChange={handleFileChange}
                   className="form-control-file mt-2"
                 />
+
+                {/* Preview Section */}
+                {selectedResumeName ? (
+                  <div className="mt-2">
+                    <small className="text-success">
+                      Selected Resume: {selectedResumeName}{" "}
+                      {existingResume &&
+                        selectedResumeName ===
+                          existingResume.split("/").pop() && (
+                          <>
+                            -
+                            <a
+                              href={`${existingResume}`}
+                              target="_blank"
+                              rel="noopener noreferrer">
+                              View
+                            </a>
+                          </>
+                        )}
+                    </small>
+                  </div>
+                ) : (
+                  <small className="text-muted">No resume uploaded yet</small>
+                )}
               </div>
             </>
           )}
-
-          <br />
 
           <div className="text-center mt-4">
             <button
