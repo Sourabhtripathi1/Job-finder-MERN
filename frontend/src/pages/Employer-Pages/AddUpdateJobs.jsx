@@ -17,6 +17,11 @@ const jobTypeOptions = [
   { value: "contract", title: "Contract" },
 ];
 
+const statusOptions = [
+  { value: "1", title: "Active" },
+  { value: "0", title: "Inactive" },
+];
+
 const AddUpdateJobs = ({ editJob = false }) => {
   const { jId } = useParams();
   const navigate = useNavigate();
@@ -31,6 +36,7 @@ const AddUpdateJobs = ({ editJob = false }) => {
   const [experience, setExperience] = useState("");
   const [jobType, setJobType] = useState("full-time");
   const [company, setCompany] = useState("");
+  const [status, setStatus] = useState("1"); // Default to Active status
   const [companies, setCompanies] = useState([]);
 
   const fetchCompanies = useCallback(async () => {
@@ -66,6 +72,7 @@ const AddUpdateJobs = ({ editJob = false }) => {
         setJobType(job.jobType || "full-time");
         setCompany(job.company?._id || "");
         setcategory(job.category?._id || "");
+        setStatus(job.status?.toString() || "1"); // Set status based on job data
       } else {
         toast.error("Job not found");
       }
@@ -117,6 +124,7 @@ const AddUpdateJobs = ({ editJob = false }) => {
         jobType,
         experience,
         companyId: company,
+        status: status === "1" ? 1 : 0, // Convert status to 1 (Active) or 0 (Inactive)
       };
 
       const url = editJob ? `${API_URL}update/${jId}` : `${API_URL}create`;
@@ -255,6 +263,15 @@ const AddUpdateJobs = ({ editJob = false }) => {
               options={companies}
               selected={company}
               onSelectChange={setCompany}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Status</label>
+            <CommonSelect
+              options={statusOptions}
+              selected={status}
+              onSelectChange={setStatus}
             />
           </div>
 

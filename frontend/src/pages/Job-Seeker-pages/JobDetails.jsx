@@ -56,12 +56,50 @@ const JobDetails = () => {
 
     const result = await Swal.fire({
       title: "Apply for this Job?",
-      text: "Do you want to submit your current profile or update your profile first?",
-      icon: "question",
+      html: `
+        <p>Do you want to submit your current profile or update your resume first?</p>
+        <input type="file" id="resumeUpload" accept=".doc,.docx" style="display:none" />
+        <button id="changeResumeBtn" class="swal2-confirm swal2-styled" style="background-color: #6c757d; margin-top: 1rem;">Change Resume</button>
+      `,
       showCancelButton: true,
       confirmButtonText: "Submit Application",
       cancelButtonText: "Update Profile",
       reverseButtons: true,
+      didOpen: () => {
+        const changeResumeBtn =
+          Swal.getPopup().querySelector("#changeResumeBtn");
+        const fileInput = Swal.getPopup().querySelector("#resumeUpload");
+
+        changeResumeBtn.addEventListener("click", () => {
+          fileInput.click();
+        });
+
+        fileInput.addEventListener("change", async (event) => {
+          const selectedFile = event.target.files[0];
+          if (selectedFile) {
+            // You can directly upload or update the resume here
+            const formData = new FormData();
+            formData.append("resume", selectedFile);
+
+            try {
+              toggleLoader(true);
+              await axios.post(`${API_URL}user/update/resume`, formData, {
+                withCredentials: true,
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              });
+              toast.success("Resume updated successfully!");
+              toggleLoader(false);
+            } catch (error) {
+              toggleLoader(false);
+              toast.error(
+                error.response?.data?.message || "Failed to update resume."
+              );
+            }
+          }
+        });
+      },
     });
 
     if (result.isConfirmed) {
@@ -75,6 +113,7 @@ const JobDetails = () => {
       navigate("/my-profile");
     }
   };
+  
 
   useEffect(() => {
     fetchJob();

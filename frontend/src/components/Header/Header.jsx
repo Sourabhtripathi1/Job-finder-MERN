@@ -65,10 +65,10 @@ const Header = () => {
                               <Link to="/admin/dashboard">Dashboard</Link>
                             </li>
                             <li>
-                              <Link to="/admin/jobs">Jobs</Link>
+                              <Link to="/admin/company">Company</Link>
                             </li>
                             <li>
-                              <Link to="/admin/company">Company</Link>
+                              <Link to="/admin/jobs">Jobs</Link>
                             </li>
                           </ul>
                         ) : (

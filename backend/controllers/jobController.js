@@ -13,6 +13,7 @@ export const postJob = async (req, res) => {
       jobType,
       experience,
       companyId,
+      status, // added
     } = req.body;
 
     const userId = req.user._id;
@@ -26,7 +27,7 @@ export const postJob = async (req, res) => {
       !location ||
       !category ||
       !jobType ||
-      !experience ||
+      experience === undefined ||
       !companyId
     ) {
       return res.status(400).json({
@@ -48,6 +49,7 @@ export const postJob = async (req, res) => {
       experience,
       category,
       company: companyId,
+      status: status !== undefined ? status : 0, // default 0 if not provided
       postedBy: userId,
     });
 
@@ -78,6 +80,7 @@ export const updateJob = async (req, res) => {
       jobType,
       experience,
       companyId,
+      status, // added
     } = req.body;
 
     if (
@@ -89,7 +92,7 @@ export const updateJob = async (req, res) => {
       !location ||
       !category ||
       !jobType ||
-      !experience ||
+      experience === undefined ||
       !companyId
     ) {
       return res.status(400).json({
@@ -105,7 +108,7 @@ export const updateJob = async (req, res) => {
         .json({ message: "Job not found.", success: false });
     }
 
-    if (job.postedBy.toString() !== adminId) {
+    if (job.postedBy.toString() != adminId.toString()) {
       return res
         .status(403)
         .json({ message: "Unauthorized action.", success: false });
@@ -123,6 +126,7 @@ export const updateJob = async (req, res) => {
     job.jobType = jobType;
     job.experience = experience;
     job.company = companyId;
+    job.status = status !== undefined ? status : job.status; // update if provided
 
     await job.save();
 
@@ -137,6 +141,107 @@ export const updateJob = async (req, res) => {
   }
 };
 
+// Get job by ID
+export const getJobById = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id)
+      .populate("company")
+      .populate("category")
+      .populate("location");
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found", success: false });
+    }
+
+    res.status(200).json({ job, success: true });
+  } catch (error) {
+    console.error("Error fetching job:", error);
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+// Get all jobs of a company
+export const getCompanyJobs = async (req, res) => {
+  try {
+    const companyId = req.params.cId;
+
+    const jobs = await Job.find({ company: companyId })
+      .populate("company")
+      .populate("category")
+      .populate("location");
+
+    if (!jobs || jobs.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No jobs found for this company", success: false });
+    }
+
+    res.status(200).json({ jobs, success: true });
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+// Get all jobs posted by Admin
+export const getAdminJobs = async (req, res) => {
+  try {
+    const adminId = req.user._id;
+
+    const jobs = await Job.find({ postedBy: adminId })
+      .populate({
+        path: "company",
+        select: "name location",
+        populate: {
+          path: "location",
+          model: "City",
+          select: "name state",
+        },
+      })
+      .populate({
+        path: "location",
+        model: "City",
+        select: "name state",
+      })
+      .populate({
+        path: "category",
+        model: "Category",
+      })
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      jobs,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error fetching admin jobs:", error);
+    return res.status(500).json({ message: "Server error.", success: false });
+  }
+};
+
+// Delete a job
+export const deleteJob = async (req, res) => {
+  const jobId = req.params.id;
+
+  try {
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ success: false, message: "Job not found" });
+    }
+
+    await Job.findByIdAndDelete(jobId);
+
+    return res.json({ success: true, message: "Job deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting job:", error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while deleting the job",
+    });
+  }
+};
+
+// Get all jobs with filters
 export const getAllJobs = async (req, res) => {
   try {
     const {
@@ -177,12 +282,12 @@ export const getAllJobs = async (req, res) => {
       });
     }
 
-    // Filter by experience (in years)
+    // Filter by experience
     if (minExp || maxExp) {
       query.$and.push({
         experience: {
-          $gte: `${minExp || 0} years`,
-          $lte: `${maxExp || 50} years`,
+          $gte: Number(minExp || 0),
+          $lte: Number(maxExp || 50),
         },
       });
     }
@@ -191,6 +296,8 @@ export const getAllJobs = async (req, res) => {
     if (jobTypes && jobTypes.length > 0) {
       query.$and.push({ jobType: { $in: jobTypes } });
     }
+
+    query.$and.push({ status: 1 });
 
     const jobs = await Job.find(query)
       .populate("company")
@@ -205,105 +312,5 @@ export const getAllJobs = async (req, res) => {
   } catch (error) {
     console.error("Error fetching jobs:", error);
     return res.status(500).json({ message: "Server error.", success: false });
-  }
-};
-
-// Get job by ID
-export const getJobById = async (req, res) => {
-  try {
-    const job = await Job.findById(req.params.id)
-      .populate("company")
-      .populate("category")
-      .populate("location");
-
-    if (!job) {
-      return res.status(404).json({ message: "Job not found", success: false });
-    }
-
-    res.status(200).json({ job, success: true });
-  } catch (error) {
-    console.error("Error fetching job:", error);
-    res.status(500).json({ message: "Server error", success: false });
-  }
-};
-
-export const getCompanyJobs = async (req, res) => {
-  try {
-    const companyId = req.params.cId;
-
-    const jobs = await Job.find({ company: companyId })
-      .populate("company")
-      .populate("category")
-      .populate("location");
-
-    if (!jobs || jobs.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No jobs found for this company", success: false });
-    }
-
-    res.status(200).json({ jobs, success: true });
-  } catch (error) {
-    console.error("Error fetching jobs:", error);
-    res.status(500).json({ message: "Server error", success: false });
-  }
-};
-
-
-// Admin's jobs
-export const getAdminJobs = async (req, res) => {
-  try {
-    const adminId = req.user._id;
-
-    const jobs = await Job.find({ postedBy: adminId })
-      .populate({
-        path: "company",
-        select: "name location",
-        populate: {
-          path: "location",
-          model: "City",
-          select: "name state",
-        },
-      })
-      .populate({
-        path: "location",
-        model: "City",
-        select: "name state",
-      })
-      .populate({
-        path: "category",
-        model: "Category",
-      })
-      .sort({ createdAt: -1 });
-
-    return res.status(200).json({
-      jobs,
-      success: true,
-    });
-  } catch (error) {
-    console.error("Error fetching admin jobs:", error);
-    return res.status(500).json({ message: "Server error.", success: false });
-  }
-};
-
-// Delete API
-export const deleteJob = async (req, res) => {
-  const jobId = req.params.id;
-
-  try {
-    const job = await Job.findById(jobId);
-    if (!job) {
-      return res.status(404).json({ success: false, message: "Job not found" });
-    }
-
-    await Job.findByIdAndDelete(jobId);
-
-    return res.json({ success: true, message: "Job deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting job:", error);
-    return res.status(500).json({
-      success: false,
-      message: "An error occurred while deleting the job",
-    });
   }
 };

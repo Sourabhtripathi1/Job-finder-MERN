@@ -191,6 +191,7 @@ const ProfilePage = () => {
                 <input
                   type="file"
                   onChange={handleFileChange}
+                  accept=".doc,.docx"
                   className="form-control-file mt-2"
                 />
 
@@ -206,8 +207,10 @@ const ProfilePage = () => {
                             -
                             <a
                               href={`${existingResume}`}
+                              style={{ padding: "15px", margin: "15px" }}
                               target="_blank"
-                              rel="noopener noreferrer">
+                              rel="noopener noreferrer"
+                              className="btn">
                               View
                             </a>
                           </>

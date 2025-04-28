@@ -61,6 +61,18 @@ const Jobs = () => {
     }
   };
 
+  // Status formatter
+  const getStatusText = (status) => {
+    switch (status) {
+      case 1:
+        return "Active";
+      case 0:
+        return "Inactive";
+      default:
+        return "Pending";
+    }
+  };
+
   return (
     <div className="container mt-50 mb-50">
       {/* Page Title & Button */}
@@ -83,6 +95,7 @@ const Jobs = () => {
               <th scope="col">Job Title</th>
               <th scope="col">Company</th>
               <th scope="col">Location</th>
+              <th scope="col">Status</th> {/* Added Status Column */}
               <th scope="col" style={{ width: "20%" }}>
                 Actions
               </th>
@@ -107,16 +120,30 @@ const Jobs = () => {
 
                   {/* Location */}
                   <td>
-                    {item.company?.location
+                    {item.location
                       ? `${item.location.name}, ${item.location.state}`
                       : "N/A"}
+                  </td>
+
+                  {/* Status */}
+                  <td>
+                    <span
+                      className={`badge ${
+                        item.status === 1
+                          ? "badge-success"
+                          : item.status === 0
+                          ? "badge-danger"
+                          : "badge-warning"
+                      }`}>
+                      {getStatusText(item.status)}
+                    </span>
                   </td>
 
                   {/* Actions */}
                   <td>
                     <div
                       className="d-flex justify-content-around"
-                      style={{ justifyContent: "space-around", width: "110%" }}>
+                      style={{ width: "110%" }}>
                       <Link
                         to={`/admin/edit-job/${item._id}`}
                         className="btn btn-warning btn-sm">

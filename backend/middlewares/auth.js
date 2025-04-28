@@ -11,11 +11,9 @@ export default async function (req, res, next) {
   }
 
   try {
-    // Verify token and decode user info
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded.user.user; // Assigning the decoded user object to req.user
+    req.user = decoded.user.user;
 
-    // Fetch user from database to ensure user exists
     const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
