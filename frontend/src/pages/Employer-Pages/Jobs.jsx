@@ -9,18 +9,25 @@ const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}job/`;
 
 const Jobs = () => {
   const [jobsData, setJobsData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10); // you can change limit if you want
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     loadJobs();
-  }, []);
+  }, [page]); // reload when page changes
 
   const loadJobs = async () => {
     try {
       toggleLoader();
-      const res = await axios.get(`${API_URL}admin-jobs`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${API_URL}admin-jobs?page=${page}&limit=${limit}`,
+        {
+          withCredentials: true,
+        }
+      );
       setJobsData(res.data.jobs);
+      setTotalPages(res.data.totalPages);
     } catch (err) {
       console.error("Error fetching jobs:", err);
     } finally {
@@ -61,7 +68,6 @@ const Jobs = () => {
     }
   };
 
-  // Status formatter
   const getStatusText = (status) => {
     switch (status) {
       case 1:
@@ -71,6 +77,15 @@ const Jobs = () => {
       default:
         return "Pending";
     }
+  };
+
+  // Pagination Handlers
+  const handlePrevious = () => {
+    if (page > 1) setPage(page - 1);
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) setPage(page + 1);
   };
 
   return (
@@ -95,7 +110,7 @@ const Jobs = () => {
               <th scope="col">Job Title</th>
               <th scope="col">Company</th>
               <th scope="col">Location</th>
-              <th scope="col">Status</th> {/* Added Status Column */}
+              <th scope="col">Status</th>
               <th scope="col" style={{ width: "20%" }}>
                 Actions
               </th>
@@ -105,9 +120,8 @@ const Jobs = () => {
             {jobsData.length > 0 ? (
               jobsData.map((item, index) => (
                 <tr key={item._id}>
-                  <td>{index + 1}</td>
+                  <td>{(page - 1) * limit + index + 1}</td>
 
-                  {/* Job Title */}
                   <td className="text-left">
                     <strong>{item.title}</strong>
                     <div className="text-muted" style={{ fontSize: "0.85rem" }}>
@@ -115,17 +129,14 @@ const Jobs = () => {
                     </div>
                   </td>
 
-                  {/* Company Name */}
                   <td>{item.company?.name || "-"}</td>
 
-                  {/* Location */}
                   <td>
                     {item.location
                       ? `${item.location.name}, ${item.location.state}`
                       : "N/A"}
                   </td>
 
-                  {/* Status */}
                   <td>
                     <span
                       className={`badge ${
@@ -139,7 +150,6 @@ const Jobs = () => {
                     </span>
                   </td>
 
-                  {/* Actions */}
                   <td>
                     <div
                       className="d-flex justify-content-around"
@@ -160,13 +170,32 @@ const Jobs = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="8" className="text-muted py-4">
+                <td colSpan="6" className="text-muted py-4">
                   No jobs available.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="d-flex justify-content-between align-items-center mt-4">
+        <button
+          className="btn btn-primary"
+          disabled={page === 1}
+          onClick={handlePrevious}>
+          Previous
+        </button>
+        <span>
+          Page {page} of {totalPages}
+        </span>
+        <button
+          className="btn btn-primary"
+          disabled={page === totalPages}
+          onClick={handleNext}>
+          Next
+        </button>
       </div>
     </div>
   );

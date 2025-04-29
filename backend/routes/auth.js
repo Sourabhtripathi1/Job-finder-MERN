@@ -129,7 +129,6 @@ router.get("/me", async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000,
       })
       .json({ msg: "Login successful", user });
-
   } catch (error) {
     console.log(error);
 

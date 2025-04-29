@@ -33,7 +33,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // Route for updating user
-router.post("/update/resume", auth, upload.single("resume"), updateResume); 
+router.post("/update/resume", auth, upload.single("resume"), updateResume);
 router.post("/update/:userid", auth, upload.single("resume"), updateUser);
 
 export default router;

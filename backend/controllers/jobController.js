@@ -184,33 +184,46 @@ export const getCompanyJobs = async (req, res) => {
 };
 
 // Get all jobs posted by Admin
+// Get all jobs posted by Admin with Pagination
 export const getAdminJobs = async (req, res) => {
   try {
     const adminId = req.user._id;
+    const page = parseInt(req.query.page) || 1; // default page 1
+    const limit = parseInt(req.query.limit) || 10; // default limit 10
 
-    const jobs = await Job.find({ postedBy: adminId })
-      .populate({
-        path: "company",
-        select: "name location",
-        populate: {
+    const skip = (page - 1) * limit;
+
+    const [jobs, totalJobs] = await Promise.all([
+      Job.find({ postedBy: adminId })
+        .populate({
+          path: "company",
+          select: "name location",
+          populate: {
+            path: "location",
+            model: "City",
+            select: "name state",
+          },
+        })
+        .populate({
           path: "location",
           model: "City",
           select: "name state",
-        },
-      })
-      .populate({
-        path: "location",
-        model: "City",
-        select: "name state",
-      })
-      .populate({
-        path: "category",
-        model: "Category",
-      })
-      .sort({ createdAt: -1 });
+        })
+        .populate({
+          path: "category",
+          model: "Category",
+        })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Job.countDocuments({ postedBy: adminId }),
+    ]);
 
     return res.status(200).json({
       jobs,
+      totalJobs,
+      totalPages: Math.ceil(totalJobs / limit),
+      currentPage: page,
       success: true,
     });
   } catch (error) {
@@ -245,7 +258,6 @@ export const deleteJob = async (req, res) => {
 export const getAllJobs = async (req, res) => {
   try {
     const {
-      keyword = "",
       city,
       category,
       minSalary,
@@ -253,60 +265,72 @@ export const getAllJobs = async (req, res) => {
       minExp,
       maxExp,
       jobTypes,
+      sortBy,
+      page = 1,
+      limit = 10,
     } = req.query;
 
-    const query = {
-      $and: [
-        {
-          $or: [
-            { title: { $regex: keyword, $options: "i" } },
-            { description: { $regex: keyword, $options: "i" } },
-          ],
-        },
-      ],
-    };
+    const query = { $and: [] };
 
-    // Filter by city
     if (city) {
       query.$and.push({ location: city });
     }
     if (category) {
-      query.$and.push({ category: category });
+      query.$and.push({ category });
     }
-
-    // Filter by salary range
     if (minSalary || maxSalary) {
       query.$and.push({
-        "salary.min": { $gte: Number(minSalary || 0) },
-        "salary.max": { $lte: Number(maxSalary || Infinity) },
+        "salary.min": { $gte: Number(minSalary) || 0 },
+        "salary.max": { $lte: Number(maxSalary) || Infinity },
       });
     }
-
-    // Filter by experience
     if (minExp || maxExp) {
       query.$and.push({
         experience: {
-          $gte: Number(minExp || 0),
-          $lte: Number(maxExp || 50),
+          $gte: Number(minExp) || 0,
+          $lte: Number(maxExp) || 50,
         },
       });
     }
-
-    // Filter by job types
-    if (jobTypes && jobTypes.length > 0) {
-      query.$and.push({ jobType: { $in: jobTypes } });
+    if (jobTypes) {
+      const typesArray = jobTypes.split(",").map((type) => type.trim());
+      if (typesArray.length > 0) {
+        query.$and.push({ jobType: { $in: typesArray } });
+      }
     }
 
     query.$and.push({ status: 1 });
 
+    if (query.$and.length === 0) {
+      delete query.$and;
+    }
+
+    let sortOption = {};
+    if (sortBy === "date") {
+      sortOption = { createdAt: -1 };
+    } else {
+      sortOption = { title: 1 };
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    // Fetch jobs
     const jobs = await Job.find(query)
       .populate("company")
       .populate("location")
       .populate("category")
-      .sort({ createdAt: -1 });
+      .sort(sortOption)
+      .skip(skip)
+      .limit(Number(limit));
+
+    // Count total jobs
+    const totalJobs = await Job.countDocuments(query);
 
     return res.status(200).json({
       jobs,
+      totalJobs,
+      totalPages: Math.ceil(totalJobs / limit),
+      currentPage: Number(page),
       success: true,
     });
   } catch (error) {

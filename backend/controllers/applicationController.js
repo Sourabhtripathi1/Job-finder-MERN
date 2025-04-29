@@ -65,31 +65,30 @@ export const applyJob = async (req, res) => {
 
 export const getAppliedJobs = async (req, res) => {
   try {
-    const userId = req.user._id; // Assuming this comes from your auth middleware
+    const userId = req.user._id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalApplications = await Application.countDocuments({ userId });
 
     const applications = await Application.find({ userId })
       .sort({ appliedAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .populate({
         path: "jobId",
-        select: "title company", // Only populate necessary fields
+        select: "title company",
         populate: {
           path: "company",
-          select: "name location", // Only populate company name and location
+          select: "name location",
           populate: {
             path: "location",
-            select: "name state", // From City collection
+            select: "name state",
           },
         },
       });
 
-    if (!applications.length) {
-      return res.status(404).json({
-        message: "No applications found.",
-        success: false,
-      });
-    }
-
-    // Format the response cleanly for frontend
     const formattedApplications = applications.map((app) => ({
       _id: app._id,
       status: app.status,
@@ -114,6 +113,9 @@ export const getAppliedJobs = async (req, res) => {
 
     return res.status(200).json({
       applications: formattedApplications,
+      totalApplications,
+      currentPage: page,
+      totalPages: Math.ceil(totalApplications / limit),
       success: true,
     });
   } catch (error) {
@@ -128,20 +130,31 @@ export const getAppliedJobs = async (req, res) => {
 export const getApplicationsByJob = async (req, res) => {
   try {
     const { jobId } = req.params;
-    const { status } = req.query; // Get status filter from query parameters
+    const { status, page = 1, limit = 10 } = req.query;
 
-    // Build the filter object
     let filter = { jobId };
-
     if (status && status !== "all") {
       filter.status = status;
     }
 
-    const applications = await Application.find(filter)
-      .populate("userId", "-password")
-      .sort({ appliedAt: -1 });
+    const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    res.json({ applications });
+    const [applications, total] = await Promise.all([
+      Application.find(filter)
+        .populate("userId", "-password")
+        .sort({ appliedAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit)),
+      Application.countDocuments(filter),
+    ]);
+
+    res.json({
+      applications,
+      total,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (error) {
     res.status(500).json({ message: "Error fetching applications", error });
   }

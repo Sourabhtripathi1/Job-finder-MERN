@@ -56,7 +56,16 @@ export const registerCompany = async (req, res) => {
 
 export const getCompany = async (req, res) => {
   try {
-    const companies = await Company.find().populate("CreatedBy", "name email");
+    const page = parseInt(req.query.page) || 1; // Default page 1
+    const limit = parseInt(req.query.limit) || 10; // Default 10 companies per page
+    const skip = (page - 1) * limit;
+
+    const totalCompanies = await Company.countDocuments();
+
+    const companies = await Company.find()
+      .populate("CreatedBy", "name email")
+      .skip(skip)
+      .limit(limit);
 
     // For each company, count active jobs
     const companiesWithJobCount = await Promise.all(
@@ -76,6 +85,9 @@ export const getCompany = async (req, res) => {
     return res.status(200).json({
       companies: companiesWithJobCount,
       success: true,
+      totalCompanies,
+      totalPages: Math.ceil(totalCompanies / limit),
+      currentPage: page,
     });
   } catch (error) {
     console.error("Get Company Error:", error.message);

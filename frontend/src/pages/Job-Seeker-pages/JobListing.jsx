@@ -26,10 +26,14 @@ const JobListing = () => {
   });
   const [experience, setExperience] = useState({ max: 0, min: 0 });
 
-  // Fetch jobs whenever filters change
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const limit = 5; // Jobs per page
+
   useEffect(() => {
     const fetchJobs = async () => {
-      toggleLoader(true);
+      // toggleLoader(true);
       setError(null);
 
       try {
@@ -39,12 +43,14 @@ const JobListing = () => {
           sortBy,
           minSalary: salary.min,
           maxSalary: salary.max,
-          minExperience: experience.min,
-          maxExperience: experience.max,
+          minExp: experience.min,
+          maxExp: experience.max,
           jobTypes: Object.entries(jobTypes)
             .filter(([_, v]) => v)
             .map(([k]) => k.replace(/([A-Z])/g, "-$1").toLowerCase())
             .join(","),
+          page: currentPage,
+          limit,
         };
 
         const response = await axios.get(`${API_URL}/list`, {
@@ -53,6 +59,7 @@ const JobListing = () => {
 
         if (response.data.success) {
           setJobs(response.data.jobs);
+          setTotalPages(response.data.totalPages);
         } else {
           setError("Failed to fetch jobs.");
         }
@@ -60,12 +67,12 @@ const JobListing = () => {
         setError("Error fetching jobs.");
         console.error(err);
       } finally {
-        toggleLoader(false);
+        // toggleLoader(false);
       }
     };
 
     fetchJobs();
-  }, [Category, city, sortBy, salary, experience, jobTypes]);
+  }, [Category, city, sortBy, salary, experience, jobTypes, currentPage]);
 
   const handleJobTypeChange = (e) => {
     const { name, checked } = e.target;
@@ -73,6 +80,12 @@ const JobListing = () => {
       ...prev,
       [name]: checked,
     }));
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   const sortByOptions = [
@@ -154,23 +167,25 @@ const JobListing = () => {
                     <input
                       type="number"
                       value={experience.min}
-                      onChange={(e) =>
-                        setExperience((prev) => ({
-                          ...prev,
-                          min: Number(e.target.value),
-                        }))
-                      }
+                      onChange={(e) => {
+                        if (e.target.value <= experience.max) {
+                          setExperience((prev) => ({
+                            ...prev,
+                            min: Number(e.target.value),
+                          }));
+                        }
+                      }}
                     />
                     <label>Max:</label>
                     <input
                       type="number"
                       value={experience.max}
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setExperience((prev) => ({
                           ...prev,
                           max: Number(e.target.value),
-                        }))
-                      }
+                        }));
+                      }}
                     />
                   </div>
                 </div>
@@ -195,7 +210,7 @@ const JobListing = () => {
                 <div className="container">
                   <div className="row">
                     <div className="col-lg-12">
-                      <div className="count-job mb-35">
+                      <div className="count-job mb-35 d-flex justify-content-between align-items-center">
                         <span>{jobs.length} Jobs found</span>
                         <div className="select-job-items">
                           <span>Sort by</span>
@@ -210,46 +225,70 @@ const JobListing = () => {
                   </div>
 
                   {error && <p className="text-danger">Error: {error}</p>}
+                  {jobs.length === 0 && !error && <p>No jobs found.</p>}
                   {jobs.map((job, index) => (
                     <JobListElement key={index} job={job} />
                   ))}
                 </div>
               </section>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Pagination Placeholder */}
-      <div className="pagination-area pb-115 text-center">
-        <div className="container">
-          <div className="row">
-            <div className="col-xl-12">
-              <div className="single-wrap d-flex justify-content-center">
-                <nav aria-label="Page navigation example">
-                  <ul className="pagination justify-content-start">
-                    <li className="page-item active">
-                      <a className="page-link" href="#">
-                        01
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        02
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        03
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        <span className="ti-angle-right" />
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
+              {/* Pagination */}
+              <div className="pagination-area pb-115 text-center">
+                <div className="container">
+                  <div className="row">
+                    <div className="col-xl-12">
+                      <div className="single-wrap d-flex justify-content-center">
+                        <nav aria-label="Page navigation example">
+                          <ul className="pagination justify-content-start">
+                            {/* Prev Button (hide if first page) */}
+                            {currentPage > 1 && (
+                              <li className="page-item">
+                                <button
+                                  className="page-link"
+                                  onClick={() =>
+                                    handlePageChange(currentPage - 1)
+                                  }>
+                                  Prev
+                                </button>
+                              </li>
+                            )}
+
+                            {/* Page Numbers */}
+                            {Array.from(
+                              { length: totalPages },
+                              (_, i) => i + 1
+                            ).map((pageNum) => (
+                              <li
+                                key={pageNum}
+                                className={`page-item ${
+                                  currentPage === pageNum ? "active" : ""
+                                }`}>
+                                <button
+                                  className="page-link"
+                                  onClick={() => handlePageChange(pageNum)}>
+                                  {pageNum}
+                                </button>
+                              </li>
+                            ))}
+
+                            {/* Next Button (hide if last page) */}
+                            {currentPage < totalPages && (
+                              <li className="page-item">
+                                <button
+                                  className="page-link"
+                                  onClick={() =>
+                                    handlePageChange(currentPage + 1)
+                                  }>
+                                  Next
+                                </button>
+                              </li>
+                            )}
+                          </ul>
+                        </nav>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

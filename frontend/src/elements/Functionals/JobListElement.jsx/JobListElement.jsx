@@ -49,8 +49,8 @@ const JobListElement = ({ job }) => {
             </li>
             <li>
               {salaryCurrency}
-              {salaryMin} - {salaryCurrency}
-              {salaryMax}
+              {salaryMin} Lac - {salaryCurrency}
+              {salaryMax} Lac
             </li>
           </ul>
         </div>

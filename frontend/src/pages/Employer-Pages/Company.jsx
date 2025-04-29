@@ -9,10 +9,12 @@ const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}company/`;
 
 const Company = () => {
   const [companyData, setCompanyData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    loadCompanies();
-  }, []);
+    loadCompanies(page);
+  }, [page]);
 
   const deleteCompany = async (id) => {
     const confirmDelete = await Swal.fire({
@@ -34,7 +36,7 @@ const Company = () => {
 
         if (res.data.success) {
           toast.success("Company deleted successfully.");
-          loadCompanies();
+          loadCompanies(page); // reload current page
         } else {
           toast.error("Failed to delete company.");
         }
@@ -47,18 +49,30 @@ const Company = () => {
     }
   };
 
-  const loadCompanies = async () => {
+  const loadCompanies = async (currentPage = 1) => {
     try {
       toggleLoader();
-      const res = await axios.get(`${API_URL}list`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${API_URL}list?page=${currentPage}&limit=10`,
+        {
+          withCredentials: true,
+        }
+      );
       setCompanyData(res.data.companies);
+      setTotalPages(res.data.totalPages);
     } catch (err) {
       console.error("Error fetching companies:", err);
     } finally {
       toggleLoader();
     }
+  };
+
+  const handlePrevious = () => {
+    if (page > 1) setPage(page - 1);
+  };
+
+  const handleNext = () => {
+    if (page < totalPages) setPage(page + 1);
   };
 
   return (
@@ -91,7 +105,7 @@ const Company = () => {
             {companyData.length > 0 ? (
               companyData.map((item, index) => (
                 <tr key={item._id}>
-                  <td>{index + 1}</td>
+                  <td>{(page - 1) * 10 + index + 1}</td>
                   <td className="text-left">
                     <div
                       className="d-flex align-items-center"
@@ -141,6 +155,25 @@ const Company = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="d-flex justify-content-between align-items-center mt-4">
+        <button
+          className="btn btn-secondary mr-2"
+          onClick={handlePrevious}
+          disabled={page === 1}>
+          Previous
+        </button>
+        <span className="mx-3">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          className="btn btn-secondary ml-2"
+          onClick={handleNext}
+          disabled={page === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );

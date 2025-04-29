@@ -11,8 +11,18 @@ import {
   getUserCompanies,
 } from "../controllers/companyController.js";
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./temp");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now();
+    cb(null, uniqueSuffix + "-" + file.originalname);
+  },
+});
+
 // File handling setup
-const upload = multer({ dest: "temp/" });
+const upload = multer({ storage: storage });
 
 // Routes
 router.post("/register", auth, upload.single("logo"), registerCompany);

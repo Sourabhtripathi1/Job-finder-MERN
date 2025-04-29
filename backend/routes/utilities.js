@@ -7,7 +7,9 @@ import { Job } from "../models/Job.js";
 import { Application } from "../models/Application.js";
 import { User } from "../models/User.js";
 import auth from "../middlewares/auth.js";
+import mongoose from "mongoose";
 
+// Get city list
 router.get("/city-list", async (req, res) => {
   try {
     const cities = await City.find({});
@@ -18,6 +20,7 @@ router.get("/city-list", async (req, res) => {
   }
 });
 
+// Get category list
 router.get("/category-list", async (req, res) => {
   try {
     const categories = await Category.find({});
@@ -28,55 +31,46 @@ router.get("/category-list", async (req, res) => {
   }
 });
 
+// Get dashboard stats
 router.get("/dashboard-stats", auth, async (req, res) => {
   try {
-    const companiesCount = await Company.countDocuments({
-      CreatedBy: mongoose.Types.ObjectId(req.user._id),
-    });
-
-    const jobsCount = await Job.countDocuments({
-      postedBy: mongoose.Types.ObjectId(req.user._id),
-    });
+    const userId = new mongoose.Types.ObjectId(req.user._id);
 
     const last7Days = new Date();
     last7Days.setDate(last7Days.getDate() - 7);
 
-    const newApplicants = await Application.aggregate([
-      {
-        $match: {
-          appliedAt: { $gte: last7Days },
+    // Run queries in parallel
+    const [
+      companiesCount,
+      jobsCount,
+      newApplicantsAggregation,
+      totalUsers,
+      activeJobs,
+    ] = await Promise.all([
+      Company.countDocuments({ CreatedBy: userId }),
+      Job.countDocuments({ postedBy: userId }),
+      Application.aggregate([
+        { $match: { appliedAt: { $gte: last7Days } } },
+        {
+          $lookup: {
+            from: "jobs",
+            localField: "jobId",
+            foreignField: "_id",
+            as: "job",
+          },
         },
-      },
-      {
-        $lookup: {
-          from: "jobs",
-          localField: "jobId",
-          foreignField: "_id",
-          as: "job",
-        },
-      },
-      {
-        $unwind: "$job",
-      },
-      {
-        $match: {
-          "job.postedBy": mongoose.Types.ObjectId(req.user._id),
-        },
-      },
-      {
-        $count: "newApplicants",
-      },
+        { $unwind: "$job" },
+        { $match: { "job.postedBy": userId } },
+        { $count: "newApplicants" },
+      ]),
+      User.countDocuments({ role: "job_seeker" }),
+      Job.countDocuments({ status: 1, postedBy: userId }),
     ]);
 
     const newApplicantsCount =
-      newApplicants.length > 0 ? newApplicants[0].newApplicants : 0;
-
-    const totalUsers = await User.find({ role: "job_seeker" }).countDocuments();
-
-    const activeJobs = await Job.countDocuments({
-      status: 1,
-      postedBy: req.user._id,
-    });
+      newApplicantsAggregation.length > 0
+        ? newApplicantsAggregation[0].newApplicants
+        : 0;
 
     const dashboardData = {
       companiesCount,

@@ -1,6 +1,7 @@
 import cloudinary from "./cloudinary.js";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
+import path from "path";
 
 const uploadFile = async (localFilePath) => {
   try {
@@ -8,7 +9,10 @@ const uploadFile = async (localFilePath) => {
       throw new Error("No file path provided for upload.");
     }
 
-    const randomName = uuidv4();
+    const ext = path.extname(localFilePath);
+    const randomName = uuidv4() + ext;
+
+    // console.log(randomName, ext, localFilePath);
 
     const response = await cloudinary.uploader.upload(localFilePath, {
       public_id: randomName,
@@ -29,7 +33,6 @@ const uploadFile = async (localFilePath) => {
     }
 
     console.log(error);
-
     // throw new Error("Cloudinary file upload failed.");
   }
 };

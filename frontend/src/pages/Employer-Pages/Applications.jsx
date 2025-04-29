@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toggleLoader } from "../../hooks/CommonFunctions";
 import CommonSelect from "../../elements/Inputs/selectBox/CommonSelect";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2";
 
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI}`;
 
@@ -14,7 +14,10 @@ const Applications = () => {
   const [selectedJob, setSelectedJob] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Fetch companies owned by the employer
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
+
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
@@ -31,7 +34,6 @@ const Applications = () => {
     fetchCompanies();
   }, []);
 
-  // Fetch jobs when a company is selected
   useEffect(() => {
     if (selectedCompany) {
       const fetchJobs = async () => {
@@ -51,37 +53,38 @@ const Applications = () => {
     }
   }, [selectedCompany]);
 
-  // Fetch applications when a job is selected or filter is updated
+  const fetchApplications = async () => {
+    try {
+      const { data } = await axios.get(
+        `${API_URL}application/applied-users/${selectedJob}?status=${statusFilter}&page=${page}&limit=${limit}`,
+        { withCredentials: true }
+      );
+      setApplications(data.applications || []);
+      setTotalPages(data.totalPages || 1);
+    } catch (error) {
+      console.error("Error fetching applications", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedJob) {
-      const fetchApplications = async () => {
-        try {
-          const { data } = await axios.get(
-            `${API_URL}application/applied-users/${selectedJob}?status=${statusFilter}`,
-            { withCredentials: true }
-          );
-          setApplications(data.applications || []);
-        } catch (error) {
-          console.error("Error fetching applications", error);
-        }
-      };
       fetchApplications();
     } else {
       setApplications([]);
     }
+  }, [selectedJob, statusFilter, page]);
+
+  useEffect(() => {
+    setPage(1); // Reset page when filters change
   }, [selectedJob, statusFilter]);
 
-  // Update application status
   const handleStatusChange = async (applicationId, newStatus) => {
     try {
       await axios.post(
         `${API_URL}application/update-status/${applicationId}`,
-        {
-          status: newStatus,
-        },
+        { status: newStatus },
         { withCredentials: true }
       );
-      // Refresh applications
       setApplications((prev) =>
         prev.map((app) =>
           app._id === applicationId ? { ...app, status: newStatus } : app
@@ -92,36 +95,34 @@ const Applications = () => {
     }
   };
 
-// Updated function to show full profile in SweetAlert2
-const showProfileInAlert = (user) => {
-  if (!user) {
-    Swal.fire("Error", "User profile not available.", "error");
-    return;
-  }
+  const showProfileInAlert = (user) => {
+    if (!user) {
+      Swal.fire("Error", "User profile not available.", "error");
+      return;
+    }
 
-  console.log(user);
-  
-  const { name, email, profile } = user;
-  const { bio, skills = [] } = profile || {};
+    const { name, email, profile } = user;
+    const { bio, skills = [] } = profile || {};
 
-  // Build HTML content dynamically
-  const htmlContent = `
-    <div style="text-align: left;">
-      <p><strong>Name:</strong> ${name || '-'}</p>
-      <p><strong>Email:</strong> ${email || '-'}</p>
-      <p><strong>Bio:</strong> ${bio || '-'}</p>
-      <p><strong>Skills:</strong> ${skills.length > 0 ? skills.join(", ") : '-'}</p>
-    </div>
-  `;
+    const htmlContent = `
+      <div style="text-align: left;">
+        <p><strong>Name:</strong> ${name || "-"}</p>
+        <p><strong>Email:</strong> ${email || "-"}</p>
+        <p><strong>Bio:</strong> ${bio || "-"}</p>
+        <p><strong>Skills:</strong> ${
+          skills.length > 0 ? skills.join(", ") : "-"
+        }</p>
+      </div>
+    `;
 
-  Swal.fire({
-    title: "Applicant Profile",
-    html: htmlContent,
-    icon: "info",
-    confirmButtonText: "Close",
-    width: 600, // Optional: make it a bit wider
-  });
-};
+    Swal.fire({
+      title: "Applicant Profile",
+      html: htmlContent,
+      icon: "info",
+      confirmButtonText: "Close",
+      width: 600,
+    });
+  };
 
   return (
     <div className="container py-5">
@@ -142,7 +143,7 @@ const showProfileInAlert = (user) => {
           selected={selectedCompany}
           onSelectChange={(value) => {
             setSelectedCompany(value);
-            setSelectedJob(""); // Reset job selection
+            setSelectedJob("");
           }}
           placeholder="Select Company"
         />
@@ -250,6 +251,27 @@ const showProfileInAlert = (user) => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center align-items-center mt-4">
+              <button
+                className="btn btn-outline-primary mx-2"
+                disabled={page === 1}
+                onClick={() => setPage((prev) => prev - 1)}>
+                Previous
+              </button>
+              <span>
+                Page {page} of {totalPages}
+              </span>
+              <button
+                className="btn btn-outline-primary mx-2"
+                disabled={page === totalPages}
+                onClick={() => setPage((prev) => prev + 1)}>
+                Next
+              </button>
             </div>
           )}
         </div>
