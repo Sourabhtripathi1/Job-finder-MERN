@@ -9,7 +9,38 @@ const ContactUs = () => {
   return (
     <section className="contact-section">
       <div className="container">
-        <h1>Add Map Point Here:</h1>
+        {/* Optional Google Maps Placeholder - Remove if not implemented */}
+        <div className="d-none d-sm-block mb-5 pb-4">
+          <div id="map" style={{ height: 480, position: "relative", overflow: "hidden" }}>
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                backgroundColor: "rgb(229, 227, 223)",
+              }}
+            >
+              <div className="gm-err-container">
+                <div className="gm-err-content">
+                  <div className="gm-err-icon">
+                    <img
+                      src="https://maps.gstatic.com/mapfiles/api-3/images/icon_error.png"
+                      alt="Google Map error"
+                      draggable="false"
+                      style={{ userSelect: "none" }}
+                    />
+                  </div>
+                  <div className="gm-err-title">Oops! Something went wrong.</div>
+                  <div className="gm-err-message">
+                    This page didn't load Google Maps correctly. See the JavaScript console for technical details.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="row">
           <div className="col-12">
@@ -21,7 +52,8 @@ const ContactUs = () => {
               action=""
               method="post"
               id="contactForm"
-              noValidate="novalidate">
+              noValidate
+            >
               <div className="row">
                 <div className="col-12">
                   <div className="form-group">
@@ -31,10 +63,9 @@ const ContactUs = () => {
                       id="message"
                       cols={30}
                       rows={9}
-                      onfocus="this.placeholder = ''"
-                      onblur="this.placeholder = 'Enter Message'"
-                      placeholder=" Enter Message"
-                      defaultValue={""}
+                      onFocus={(e) => (e.target.placeholder = "")}
+                      onBlur={(e) => (e.target.placeholder = "Enter Message")}
+                      placeholder="Enter Message"
                     />
                   </div>
                 </div>
@@ -45,8 +76,8 @@ const ContactUs = () => {
                       name="name"
                       id="name"
                       type="text"
-                      onfocus="this.placeholder = ''"
-                      onblur="this.placeholder = 'Enter your name'"
+                      onFocus={(e) => (e.target.placeholder = "")}
+                      onBlur={(e) => (e.target.placeholder = "Enter your name")}
                       placeholder="Enter your name"
                     />
                   </div>
@@ -58,8 +89,8 @@ const ContactUs = () => {
                       name="email"
                       id="email"
                       type="email"
-                      onfocus="this.placeholder = ''"
-                      onblur="this.placeholder = 'Enter email address'"
+                      onFocus={(e) => (e.target.placeholder = "")}
+                      onBlur={(e) => (e.target.placeholder = "Enter email address")}
                       placeholder="Email"
                     />
                   </div>
@@ -71,17 +102,15 @@ const ContactUs = () => {
                       name="subject"
                       id="subject"
                       type="text"
-                      onfocus="this.placeholder = ''"
-                      onblur="this.placeholder = 'Enter Subject'"
+                      onFocus={(e) => (e.target.placeholder = "")}
+                      onBlur={(e) => (e.target.placeholder = "Enter Subject")}
                       placeholder="Enter Subject"
                     />
                   </div>
                 </div>
               </div>
               <div className="form-group mt-3">
-                <button
-                  type="submit"
-                  className="button button-contactForm boxed-btn">
+                <button type="submit" className="button button-contactForm boxed-btn">
                   Send
                 </button>
               </div>
@@ -112,7 +141,7 @@ const ContactUs = () => {
               </span>
               <div className="media-body">
                 <h3>
-                  <a>sourabhtripathi8103@gmail.com</a>
+                  <span>sourabhtripathi8103@gmail.com</span>
                 </h3>
                 <p>Send us your query anytime!</p>
               </div>

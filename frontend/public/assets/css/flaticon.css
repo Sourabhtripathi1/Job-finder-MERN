@@ -1,16 +1,15 @@
-	/*
-  	Flaticon icon font: Flaticon
-  	Creation date: 10/03/2020 09:37
-  	*/
-
+/*
+ 	Flaticon icon font: Flaticon
+ 	Creation date: 10/03/2020 09:37
+ 	*/
 @font-face {
   font-family: "Flaticon";
   src: url("../fonts/Flaticon.eot");
   src: url("../fonts/Flaticond41d.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/Flaticon.woff2") format("woff2"),
-       url("../fonts/Flaticon.woff") format("woff"),
-       url("../fonts/Flaticon.ttf") format("truetype"),
-       url("../fonts/Flaticon.svg#Flaticon") format("svg");
+    url("../fonts/Flaticon.woff2") format("woff2"),
+      url("../fonts/Flaticon.woff") format("woff"),
+      url("../fonts/Flaticon.ttf") format("truetype"),
+      url("../fonts/Flaticon.svg#Flaticon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -22,21 +21,506 @@
   }
 }
 
-[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
-[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+[class^="flaticon-"]:before,
+[class*=" flaticon-"]:before,
+[class^="flaticon-"]:after,
+[class*=" flaticon-"]:after {
   font-family: Flaticon;
-
-font-style: normal;
-margin-left: 20px;
+  font-style: normal;
+    margin-left: 20px;
 }
 
-.flaticon-tour:before { content: "\f100"; }
-.flaticon-report:before { content: "\f101"; }
-.flaticon-cms:before { content: "\f102"; }
-.flaticon-app:before { content: "\f103"; }
-.flaticon-helmet:before { content: "\f104"; }
-.flaticon-high-tech:before { content: "\f105"; }
-.flaticon-real-estate:before { content: "\f106"; }
-.flaticon-content:before { content: "\f107"; }
-.flaticon-search:before { content: "\f108"; }
-.flaticon-curriculum-vitae:before { content: "\f109"; }
+.flaticon-tour:before {
+  content: "\f100";
+}
+
+.flaticon-report:before {
+  content: "\f101";
+}
+
+.flaticon-cms:before {
+  content: "\f102";
+}
+
+.flaticon-app:before {
+  content: "\f103";
+}
+
+.flaticon-helmet:before {
+  content: "\f104";
+}
+
+.flaticon-high-tech:before {
+  content: "\f105";
+}
+
+.flaticon-real-estate:before {
+  content: "\f106";
+}
+
+.flaticon-content:before {
+  content: "\f107";
+}
+
+.flaticon-search:before {
+  content: "\f108";
+}
+
+.flaticon-curriculum-vitae:before {
+  content: "\f109";
+}
+
+.flaticon-computer:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/computer.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-science:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/science.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-remote:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/remote.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-shopping-cart:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/shopping-cart.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-law:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/law.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-administration:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/administration.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-government:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/government.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-event:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/event.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-media:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/media.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-hr:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/hr.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-construction:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/construction.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-fashion:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/fashion.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-engineering:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/engineering.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-security:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/security.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-writing:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/writing.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-briefcase:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/briefcase.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-healthcare:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/healthcare.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-factory:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/factory.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-real-estate:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/real-estate.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-agriculture:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/agriculture.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-data-analysis:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/data-analysis.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-camera:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/camera.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-marketing:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/marketing.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-handshake:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/handshake.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-accounting:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/accounting.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-sales:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/sales.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-delivery-truck:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/delivery-truck.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-antenna:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/antenna.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-customer-service:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/customer-service.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-support:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/support.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-hotel:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/hotel.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-fitness:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/fitness.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-education:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/education.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-paint-palette:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/paint-palette.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}
+
+.flaticon-business:before {
+  content: "";
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('../icons/business.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  /* margin-left: 20px; */
+  margin-bottom: 2rem;
+}

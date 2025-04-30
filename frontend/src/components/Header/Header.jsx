@@ -80,7 +80,7 @@ const Header = () => {
                               <Link to="/job-listing">Find a Job</Link>
                             </li>
                             <li>
-                              <Link to="/contact-us">About</Link>
+                              <Link to="/about">About</Link>
                             </li>
                             {/* <li>
                               <Link to="/">Page</Link>

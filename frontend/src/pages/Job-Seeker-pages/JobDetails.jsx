@@ -49,7 +49,7 @@ const JobDetails = () => {
 
   const handleApplyJob = async () => {
     if (!isUserLoggedIn()) {
-      toast.error("Please login first to apply for a job.");
+      // toast.error("Please login first to apply for a job.");
       navigate("/login");
       return;
     }

@@ -31,6 +31,44 @@ router.get("/category-list", async (req, res) => {
   }
 });
 
+router.get("/category-list-jobs", async (req, res) => {
+  try {
+    const result = await Category.aggregate([
+      {
+        $lookup: {
+          from: "jobs",
+          localField: "_id",
+          foreignField: "category",
+          as: "jobs",
+        },
+      },
+      {
+        $addFields: {
+          jobCount: { $size: "$jobs" },
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          icon: 1,
+          jobCount: 1,
+        },
+      },
+      {
+        $sort: { jobCount: -1 },
+      },
+      {
+        $limit: 12,
+      },
+    ]);
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error("Error fetching category list with job counts:", err);
+    return res.status(500).send({ msg: "Server Error", error: err });
+  }
+});
+
 // Get dashboard stats
 router.get("/dashboard-stats", auth, async (req, res) => {
   try {
