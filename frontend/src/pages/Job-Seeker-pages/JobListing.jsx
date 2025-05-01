@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 import CitySelect from "../../elements/Inputs/selectBox/CitySelect";
 import JobCategorySelect from "../../elements/Inputs/selectBox/JobCategorySelect";
@@ -13,6 +14,7 @@ const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI || ""}job/`;
 const JobListing = () => {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
+  const [jobTitle, setJobTitle] = useState("");
 
   const [Category, setCategory] = useState(null);
   const [city, setCity] = useState(null);
@@ -30,10 +32,10 @@ const JobListing = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const limit = 5;
+  const location = useLocation();
 
   useEffect(() => {
     const fetchJobs = async () => {
-      // toggleLoader(true);
       setError(null);
 
       try {
@@ -45,6 +47,7 @@ const JobListing = () => {
           maxSalary: salary.max,
           minExp: experience.min,
           maxExp: experience.max,
+          jobTitle: jobTitle || "",
           jobTypes: Object.entries(jobTypes)
             .filter(([_, v]) => v)
             .map(([k]) => k.replace(/([A-Z])/g, "-$1").toLowerCase())
@@ -66,8 +69,6 @@ const JobListing = () => {
       } catch (err) {
         setError("Error fetching jobs.");
         console.error(err);
-      } finally {
-        // toggleLoader(false);
       }
     };
 
@@ -97,14 +98,13 @@ const JobListing = () => {
     const queryParams = new URLSearchParams(location.search);
 
     const cityParam = queryParams.get("city");
-    const categoryParam = queryParams.get("Category");
-    const jobTitle = queryParams.get("jobTitle");
+    const categoryParam = queryParams.get("category");
+    const jobTitleParam = queryParams.get("jobTitle");
+    if (jobTitleParam) setJobTitle(jobTitleParam);
 
-    console.log(queryParams, cityParam, categoryParam, jobTitle);
-
-    if (city) setCity(cityParam);
+    if (cityParam) setCity(cityParam);
     if (categoryParam) setCategory(categoryParam);
-  }, []);
+  }, [location.search]);
 
   return (
     <>
@@ -157,6 +157,7 @@ const JobListing = () => {
                           <input
                             type="checkbox"
                             name={type}
+                            checked={jobTypes[type]}
                             onChange={handleJobTypeChange}
                           />
                           <span className="checkmark" />
@@ -256,7 +257,6 @@ const JobListing = () => {
                       <div className="single-wrap d-flex justify-content-center">
                         <nav aria-label="Page navigation example">
                           <ul className="pagination justify-content-start">
-                            {/* Prev Button (hide if first page) */}
                             {currentPage > 1 && (
                               <li className="page-item">
                                 <button
@@ -269,7 +269,6 @@ const JobListing = () => {
                               </li>
                             )}
 
-                            {/* Page Numbers */}
                             {Array.from(
                               { length: totalPages },
                               (_, i) => i + 1
@@ -287,7 +286,6 @@ const JobListing = () => {
                               </li>
                             ))}
 
-                            {/* Next Button (hide if last page) */}
                             {currentPage < totalPages && (
                               <li className="page-item">
                                 <button
@@ -306,6 +304,7 @@ const JobListing = () => {
                   </div>
                 </div>
               </div>
+              {/* End Pagination */}
             </div>
           </div>
         </div>

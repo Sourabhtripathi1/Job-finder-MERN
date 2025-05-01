@@ -37,7 +37,17 @@ const JobSearch = () => {
   const [jobTitle, setjobTitle] = useState("");
 
   const searchJob = () => {
-    navigate(`/job-listing?jobTitle=${jobTitle}&city=${selectedCity}`);
+    const params = new URLSearchParams();
+
+    if (jobTitle.trim()) {
+      params.append("jobTitle", jobTitle.trim());
+    }
+
+    if (selectedCity) {
+      params.append("city", selectedCity);
+    }
+
+    navigate(`/job-listing?${params.toString()}`);
   };
 
   return (

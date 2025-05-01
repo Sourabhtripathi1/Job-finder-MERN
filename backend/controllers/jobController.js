@@ -258,6 +258,7 @@ export const deleteJob = async (req, res) => {
 export const getAllJobs = async (req, res) => {
   try {
     const {
+      jobTitle,
       city,
       category,
       minSalary,
@@ -272,18 +273,25 @@ export const getAllJobs = async (req, res) => {
 
     const query = { $and: [] };
 
+    if (jobTitle) {
+      query.$and.push({ title: { $regex: jobTitle, $options: "i" } });
+    }
+
     if (city) {
       query.$and.push({ location: city });
     }
+
     if (category) {
       query.$and.push({ category });
     }
+
     if (minSalary || maxSalary) {
       query.$and.push({
         "salary.min": { $gte: Number(minSalary) || 0 },
         "salary.max": { $lte: Number(maxSalary) || Infinity },
       });
     }
+
     if (minExp || maxExp) {
       query.$and.push({
         experience: {
@@ -292,6 +300,7 @@ export const getAllJobs = async (req, res) => {
         },
       });
     }
+
     if (jobTypes) {
       const typesArray = jobTypes.split(",").map((type) => type.trim());
       if (typesArray.length > 0) {
@@ -314,7 +323,6 @@ export const getAllJobs = async (req, res) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    // Fetch jobs
     const jobs = await Job.find(query)
       .populate("company")
       .populate("location")
@@ -323,7 +331,6 @@ export const getAllJobs = async (req, res) => {
       .skip(skip)
       .limit(Number(limit));
 
-    // Count total jobs
     const totalJobs = await Job.countDocuments(query);
 
     return res.status(200).json({
