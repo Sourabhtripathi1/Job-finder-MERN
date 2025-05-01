@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import CitySelect from "../../elements/Inputs/selectBox/CitySelect";
 import JobCategorySelect from "../../elements/Inputs/selectBox/JobCategorySelect";
@@ -12,6 +12,9 @@ import { toggleLoader } from "../../hooks/CommonFunctions";
 const API_URL = `${import.meta.env.VITE_APP_BACKEND_URI || ""}job/`;
 
 const JobListing = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
   const [jobTitle, setJobTitle] = useState("");
@@ -32,7 +35,6 @@ const JobListing = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const limit = 5;
-  const location = useLocation();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -105,6 +107,24 @@ const JobListing = () => {
     if (cityParam) setCity(cityParam);
     if (categoryParam) setCategory(categoryParam);
   }, [location.search]);
+
+  const clearFilters = () => {
+    // setCategory(null);
+    // setCity(null);
+    // setSortBy("title");
+    // setSalary({ max: 100, min: 10 });
+    // setJobTypes({
+    //   fullTime: false,
+    //   partTime: false,
+    //   remote: false,
+    //   freelance: false,
+    // });
+    // setExperience({ max: 0, min: 0 });
+    // setJobTitle("");
+    // setCurrentPage(1);
+
+    navigate("/job-listing");
+  };
 
   return (
     <>
@@ -217,6 +237,16 @@ const JobListing = () => {
                       <PriceRangeSlider onSliderChange={setSalary} />
                     </div>
                   </aside>
+                </div>
+
+                {/* Clear Filters Button */}
+                <div className="text-center mt-50">
+                  <button
+                    className="btn btn-warning"
+                    onClick={clearFilters}
+                    style={{ padding: "1rem" }}>
+                    Clear Filters
+                  </button>
                 </div>
               </div>
             </div>
