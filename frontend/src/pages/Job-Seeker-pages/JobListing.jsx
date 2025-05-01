@@ -29,7 +29,7 @@ const JobListing = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const limit = 5; // Jobs per page
+  const limit = 5;
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -93,6 +93,19 @@ const JobListing = () => {
     { value: "date", title: "Posted date" },
   ];
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+
+    const cityParam = queryParams.get("city");
+    const categoryParam = queryParams.get("Category");
+    const jobTitle = queryParams.get("jobTitle");
+
+    console.log(queryParams, cityParam, categoryParam, jobTitle);
+
+    if (city) setCity(cityParam);
+    if (categoryParam) setCategory(categoryParam);
+  }, []);
+
   return (
     <>
       {/* Hero Area Start */}
@@ -127,7 +140,10 @@ const JobListing = () => {
                     <h4>Job Category</h4>
                   </div>
                   <div className="select-job-items2">
-                    <JobCategorySelect onSelectChange={setCategory} />
+                    <JobCategorySelect
+                      onSelectChange={setCategory}
+                      selected={Category}
+                    />
                   </div>
 
                   <div className="select-Categories pt-80 pb-50">
@@ -156,7 +172,7 @@ const JobListing = () => {
                     <h4>Job Location</h4>
                   </div>
                   <div className="select-job-items2">
-                    <CitySelect onSelectChange={setCity} />
+                    <CitySelect onSelectChange={setCity} selected={city} />
                   </div>
 
                   <div className="select-Categories pt-80 pb-50">
