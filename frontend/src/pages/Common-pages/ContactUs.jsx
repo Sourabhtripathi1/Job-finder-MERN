@@ -11,7 +11,9 @@ const ContactUs = () => {
       <div className="container">
         {/* Optional Google Maps Placeholder - Remove if not implemented */}
         <div className="d-none d-sm-block mb-5 pb-4">
-          <div id="map" style={{ height: 480, position: "relative", overflow: "hidden" }}>
+          <div
+            id="map"
+            style={{ height: 480, position: "relative", overflow: "hidden" }}>
             <div
               style={{
                 height: "100%",
@@ -20,24 +22,14 @@ const ContactUs = () => {
                 top: 0,
                 left: 0,
                 backgroundColor: "rgb(229, 227, 223)",
-              }}
-            >
-              <div className="gm-err-container">
-                <div className="gm-err-content">
-                  <div className="gm-err-icon">
-                    <img
-                      src="https://maps.gstatic.com/mapfiles/api-3/images/icon_error.png"
-                      alt="Google Map error"
-                      draggable="false"
-                      style={{ userSelect: "none" }}
-                    />
-                  </div>
-                  <div className="gm-err-title">Oops! Something went wrong.</div>
-                  <div className="gm-err-message">
-                    This page didn't load Google Maps correctly. See the JavaScript console for technical details.
-                  </div>
-                </div>
-              </div>
+              }}>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1805.8179592305166!2d75.88959238007249!3d25.14799698771467!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396f851624fa2e25%3A0x4a1ef526e5dd6c72!2sRudraa%20Classes!5e0!3m2!1sen!2sin!4v1746148964963!5m2!1sen!2sin"
+                style={{ border: 0, height: "100%", width: "100%" }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
         </div>
@@ -52,8 +44,7 @@ const ContactUs = () => {
               action=""
               method="post"
               id="contactForm"
-              noValidate
-            >
+              noValidate>
               <div className="row">
                 <div className="col-12">
                   <div className="form-group">
@@ -90,7 +81,9 @@ const ContactUs = () => {
                       id="email"
                       type="email"
                       onFocus={(e) => (e.target.placeholder = "")}
-                      onBlur={(e) => (e.target.placeholder = "Enter email address")}
+                      onBlur={(e) =>
+                        (e.target.placeholder = "Enter email address")
+                      }
                       placeholder="Email"
                     />
                   </div>
@@ -110,7 +103,9 @@ const ContactUs = () => {
                 </div>
               </div>
               <div className="form-group mt-3">
-                <button type="submit" className="button button-contactForm boxed-btn">
+                <button
+                  type="submit"
+                  className="button button-contactForm boxed-btn">
                   Send
                 </button>
               </div>
