@@ -20,7 +20,7 @@ import AddUpdateJobs from "./pages/Employer-Pages/AddUpdateJobs";
 import Dashboard from "./pages/Employer-Pages/Dashboard";
 import Company from "./pages/Employer-Pages/Company";
 import AddUpdateCompany from "./pages/Employer-Pages/AddUpdateCompany";
-import Applications from "./pages/Employer-Pages/applications";
+import Applications from "./pages/Employer-Pages/Applications";
 import URLNotFound from "./pages/Common-pages/URLNotFound";
 import useInitializeTheme from "./hooks/useInitializeTheme";
 import { ToastContainer } from "react-toastify";

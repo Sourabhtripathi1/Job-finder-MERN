@@ -71,7 +71,7 @@ export const getCompany = async (req, res) => {
     const companiesWithJobCount = await Promise.all(
       companies.map(async (company) => {
         const activeJobCount = await Job.countDocuments({
-          companyId: company._id,
+          company: company._id,
           status: 1,
         });
 
