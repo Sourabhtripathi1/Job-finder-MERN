@@ -1,4 +1,4 @@
-git clone https://github.com/Sourabhtripathi1/Job-Portal-Website-MERN.git
+git clone https://github.com/Sourabhtripathi1/Job-finder-MERN.git
 
 cd Job-Portal-Website-MERN
 
